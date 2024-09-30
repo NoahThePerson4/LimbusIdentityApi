@@ -1,0 +1,6 @@
+@LimbusIdentityApi_HostAddress = http://localhost:5098
+
+GET {{LimbusIdentityApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
