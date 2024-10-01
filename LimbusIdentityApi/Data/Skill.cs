@@ -7,6 +7,6 @@
         public int MinRoll { get; set; }
         public int MaxRoll { get; set; }
         public string? SkillEffect { get; set; }
-        public List<string?>? CoinEffects { get; set; }
+        public List<string>? CoinEffects { get; set; }
     }
 }

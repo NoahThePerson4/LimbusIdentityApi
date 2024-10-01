@@ -13,27 +13,56 @@ namespace LimbusIdentityApi.Endpoints
             var group = routes.MapGroup("/Identities")
                 .WithTags("Identities");
 
-            group.MapGet("", (IdentityDbContext dbContext) =>
+            group.MapGet("", async (IdentityDbContext dbContext, [AsParameters] GetIdentityDto identityDto, ILoggerFactory loggerFactory) =>
             {
-                var identities = dbContext.Identities.Include(identity => identity.Passives).Include(identity=> identity.Skills).ToList();
-                var identitiesDto = identities.Select(identity => identity.AsIdentityDto());
-                return Results.Ok(identitiesDto);
+                var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
+
+                var identities = new List<Identity>();
+
+                if(identityDto.filter is not null)
+                {
+                    identities = await dbContext.Identities.Where(identity => identity.Name.Contains(identityDto.filter))
+                    .OrderBy(i => i.Id)
+                    .Skip((identityDto.pageNumber - 1) * identityDto.pageSize)
+                    .Take(identityDto.pageSize)
+                    .ToListAsync();
+                }
+                else
+                {
+                    identities = await dbContext.Identities
+                    .OrderBy(i => i.Id)
+                    .Skip((identityDto.pageNumber - 1) * identityDto.pageSize)
+                    .Take(identityDto.pageSize)
+                    .ToListAsync();
+                }
+                
+                identities = dbContext.Identities.Include(identity => identity.Passives).Include(identity=> identity.Skills).ToList();
+                var identitiesDtos = identities.Select(identity => identity.AsIdentityDto());
+                logger.LogInformation("Get on Identities was called for {pages} identities on page {page} with the filter {filter}.", identityDto.pageSize, identityDto.pageNumber, identityDto.filter);
+                return Results.Ok(identitiesDtos);
             });
 
-            group.MapGet("{id}", async (int id, IdentityDbContext dbContext) =>
+            group.MapGet("{id}", async (int id, IdentityDbContext dbContext, ILoggerFactory loggerFactory) =>
             {
-                var identity = await dbContext.Identities.FindAsync(id);
+                var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
+                var identity = await dbContext.Identities
+                .Include(identity => identity.Passives)
+                .Include(identity => identity.Skills)
+                .SingleOrDefaultAsync(identity => identity.Id == id);
 
                 if (identity is null)
                 {
-                    return Results.NotFound("");
+                    logger.LogError("Get on Identities was called for the Id {id} but no Identity with that Id exists!", id);
+                    return Results.NotFound("No Identity with that Id exists!");
                 }
-                return Results.Ok(identity.AsIdentityDto());
+                logger.LogInformation("Get on Identities was called for the Identity {name} with Id {id}.", identity.Name, id);
+                return Results.Ok(identity.AsIdentityDetailedDto());
             })
                 .WithName(GetIdentity);
 
-            group.MapPost("", async (IdentityDbContext dbContext, CreateIdentityDto identityDto) =>
+            group.MapPost("", async (IdentityDbContext dbContext, CreateIdentityDto identityDto, ILoggerFactory loggerFactory) =>
             {
+                var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
                 Identity identity = new()
                 {
                     Name = identityDto.Name,
@@ -62,20 +91,32 @@ namespace LimbusIdentityApi.Endpoints
 
                     identity.Skills = skills;
                 }
+                
+                if(identityDto.SkillIds is null )
+                {
+                    logger.LogError("No Skills were given to the Identity {name}.", identity.Name);
+                } 
+                if(identityDto.PassiveIds is null)
+                {
+                    logger.LogError("No Passives were given to the Identity {name}.", identity.Name);
+                }
 
                 await dbContext.AddAsync(identity);
                 await dbContext.SaveChangesAsync();
 
+                logger.LogInformation("Created new Identity {name} with the Id {id}.", identity.Name, identity.Id);
                 return Results.CreatedAtRoute(GetIdentity, new { id = identity.Id }, identity.AsIdentityDto());
             });
 
-            group.MapPut("{id}", async (int id, IdentityDbContext dbContext, CreateIdentityDto updateIdentityDto) =>
+            group.MapPut("{id}", async (int id, IdentityDbContext dbContext, CreateIdentityDto updateIdentityDto, ILoggerFactory loggerFactory) =>
             {
+                var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
                 var identity = await dbContext.Identities.FindAsync(id);
 
                 if(identity is null)
                 {
-                    return Results.NotFound("");
+                    logger.LogError("Put was called on Identities with the Id {id} but no Identity with that Id exists!", id);
+                    return Results.NotFound("No Identity with that Id exists!");
                 }
 
                 identity.Name = updateIdentityDto.Name;
@@ -105,20 +146,23 @@ namespace LimbusIdentityApi.Endpoints
                 }
 
                 dbContext.Update(identity);
+                logger.LogInformation("The Identity {name} was updated with Id {id}.", identity.Name, id);
                 await dbContext.SaveChangesAsync();
 
                 return Results.NoContent();
 
             });
 
-            group.MapDelete("{id}", async (int id, IdentityDbContext dbContext) =>
+            group.MapDelete("{id}", async (int id, IdentityDbContext dbContext, ILoggerFactory loggerFactory) =>
             {
+                var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
                 var identity = await dbContext.Identities.FindAsync(id);
                 if(identity is not null)
                 {
                     await dbContext.Identities.Where(identity => identity.Id == id)
                     .ExecuteDeleteAsync();
                 }
+                logger.LogInformation("Delete was called for the Identity with Id {id}.", id);
                 return Results.NoContent();
             });
 
