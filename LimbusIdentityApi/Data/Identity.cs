@@ -10,6 +10,7 @@
         public int MinSpeed { get; set; }
         public int MaxSpeed { get; set; }
         public string? Image { get; set; }
-
+        public ICollection<Passive>? Passives { get; set; }
+        public ICollection<Skill>? Skills { get; set; }
     }
 }

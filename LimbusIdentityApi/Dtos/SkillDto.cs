@@ -8,6 +8,4 @@
         string? SkillEffect,
         List<string?>? CoinEffects
         );
-    
-    
 }

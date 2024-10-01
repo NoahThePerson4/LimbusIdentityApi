@@ -7,7 +7,9 @@
         int DefenseLevel,
         int MinSpeed,
         int MaxSpeed,
-        string? Image
+        string? Image,
+        List<int>? PassiveIds,
+        List<int>? SkillIds
         );
     
     

@@ -26,6 +26,8 @@ var app = builder.Build();
 
 
 app.MapPassiveEndpoints();
+app.MapSkillEndpoints();
+app.MapIdentityEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
