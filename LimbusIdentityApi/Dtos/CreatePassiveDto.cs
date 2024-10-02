@@ -3,8 +3,5 @@
     public record CreatePassiveDto(
         string Name,
         string? Cost,
-        string Description,
-        string? IdentityId);
-    
-    
+        string Description);
 }

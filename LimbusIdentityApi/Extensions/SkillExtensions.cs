@@ -10,6 +10,8 @@ namespace LimbusIdentityApi.Extensions
             return new SkillDto(
                 skill.Id,
                 skill.Name,
+                skill.Type,
+                skill.Sin,
                 skill.MinRoll,
                 skill.MaxRoll,
                 skill.SkillEffect,

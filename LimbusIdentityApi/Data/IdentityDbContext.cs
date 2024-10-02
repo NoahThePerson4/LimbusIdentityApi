@@ -8,16 +8,6 @@ namespace LimbusIdentityApi.Data
         public DbSet<Identity> Identities => Set<Identity>();
         public DbSet<Passive> Passives => Set<Passive>();
         public DbSet<Skill> Skills => Set<Skill>();
-
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Identity>()
-        //        .HasMany(i => i.Passives)
-        //        .WithOne(i => i.);
-        //    modelBuilder.Entity<Identity>()
-        //        .HasMany(i => i.Skills)
-        //        .WithOne(i => i.Identity);
-        //}
     }
 
     public class IdentityDbContextFactory : IDesignTimeDbContextFactory<IdentityDbContext>

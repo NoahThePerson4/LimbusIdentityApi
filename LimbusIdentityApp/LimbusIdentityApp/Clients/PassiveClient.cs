@@ -9,10 +9,10 @@ namespace LimbusIdentityApp.Clients
             if (Filter is null)
             {
                 return await httpClient.GetFromJsonAsync<PassiveSummary[]>(
-                    $"/Passives?PageNumber={PageNumber}&PageSize={PageSize}") ?? [];
+                    $"/Passives?pageNumber={PageNumber}&pageSize={PageSize}") ?? [];
             }
             return await httpClient.GetFromJsonAsync<PassiveSummary[]>(
-                   $"/Passives?Filter={Filter}&PageNumber={PageNumber}&PageSize={PageSize}") ?? [];
+                   $"/Passives?filter={Filter}&pageNumber={PageNumber}&pageSize={PageSize}") ?? [];
         }
 
         public async Task AddPassiveAsync(PassiveDetails passive)

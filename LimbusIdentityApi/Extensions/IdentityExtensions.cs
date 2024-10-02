@@ -50,6 +50,8 @@ namespace LimbusIdentityApi.Extensions
                 identity.Passives.Select(p => p.Description).ToList(),
                 identity.Skills.Select(s => s.Id).ToList(),
                 identity.Skills.Select(s => s.Name).ToList(),
+                identity.Skills.Select(s=>s.Type).ToList(),
+                identity.Skills.Select(s=> s.Sin).ToList(),
                 identity.Skills.Select(s => s.MinRoll).ToList(),
                 identity.Skills.Select(s => s.MaxRoll).ToList(),
                 identity.Skills.Select(s => s.SkillEffect).ToList(),

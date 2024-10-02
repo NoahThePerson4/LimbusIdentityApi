@@ -15,6 +15,8 @@
         List<string> PassiveDescription,
         List<int> SkillIds,
         List<string> SkillNames,
+        List<string>? SkillTypes,
+        List<string>? SkillSins,
         List<int> SkillMinRolls,
         List<int> SkillMaxRolls,
         List<string?> SkillEffects,
