@@ -20,7 +20,7 @@ namespace LimbusIdentityApi.Endpoints
                 var skill = new List<Skill>();
                 if (skillDto.filter is not null)
                 {
-                    skill = await dbContext.Skills.Where(skill => skill.Name.Contains(skillDto.filter))
+                    skill = await dbContext.Skills.Where(skill => skill.Name.Contains(skillDto.filter) || skill.Type.Contains(skillDto.filter) || skill.Sin.Contains(skillDto.filter))
                    .OrderBy(skill => skill.Id)
                    .Skip((skillDto.pageNumber - 1) * skillDto.pageSize)
                    .Take(skillDto.pageSize)

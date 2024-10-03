@@ -21,10 +21,12 @@ namespace LimbusIdentityApi.Endpoints
 
                 if(identityDto.filter is not null)
                 {
-                    identities = await dbContext.Identities.Where(identity => identity.Name.Contains(identityDto.filter))
+                    identities = await dbContext.Identities.Where(identity => identity.Name.Contains(identityDto.filter) || identity.Sinner.Contains(identityDto.filter))
                     .OrderBy(i => i.Id)
                     .Skip((identityDto.pageNumber - 1) * identityDto.pageSize)
                     .Take(identityDto.pageSize)
+                    .Include(identity => identity.Passives)
+                    .Include(identity => identity.Skills)
                     .ToListAsync();
                 }
                 else
@@ -33,10 +35,11 @@ namespace LimbusIdentityApi.Endpoints
                     .OrderBy(i => i.Id)
                     .Skip((identityDto.pageNumber - 1) * identityDto.pageSize)
                     .Take(identityDto.pageSize)
+                    .Include(identity => identity.Passives)
+                    .Include(identity => identity.Skills)
                     .ToListAsync();
                 }
-                
-                identities = dbContext.Identities.Include(identity => identity.Passives).Include(identity=> identity.Skills).ToList();
+
                 var identitiesDtos = identities.Select(identity => identity.AsIdentityDto());
                 logger.LogInformation("Get on Identities was called for {pages} identities on page {page} with the filter {filter}.", identityDto.pageSize, identityDto.pageNumber, identityDto.filter);
                 return Results.Ok(identitiesDtos);
@@ -55,7 +58,7 @@ namespace LimbusIdentityApi.Endpoints
                     logger.LogError("Get on Identities was called for the Id {id} but no Identity with that Id exists!", id);
                     return Results.NotFound("No Identity with that Id exists!");
                 }
-                logger.LogInformation("Get on Identities was called for the Identity {name} with Id {id}.", identity.Name, id);
+                logger.LogInformation("Get on Identities was called for the Identity {name} {sinner} with Id {id}.", identity.Name,identity.Sinner, id);
                 return Results.Ok(identity.AsIdentityDetailedDto());
             })
                 .WithName(GetIdentity);
@@ -94,17 +97,17 @@ namespace LimbusIdentityApi.Endpoints
                 
                 if(identityDto.SkillIds is null )
                 {
-                    logger.LogError("No Skills were given to the Identity {name}.", identity.Name);
+                    logger.LogError("No Skills were given to the Identity {name} {sinner}.", identity.Name, identity.Sinner);
                 } 
                 if(identityDto.PassiveIds is null)
                 {
-                    logger.LogError("No Passives were given to the Identity {name}.", identity.Name);
+                    logger.LogError("No Passives were given to the Identity {name} {sinner}.", identity.Name, identity.Sinner);
                 }
 
                 await dbContext.AddAsync(identity);
                 await dbContext.SaveChangesAsync();
 
-                logger.LogInformation("Created new Identity {name} with the Id {id}.", identity.Name, identity.Id);
+                logger.LogInformation("Created new Identity {name} {sinner} with the Id {id}.", identity.Name, identity.Sinner, identity.Id);
                 return Results.CreatedAtRoute(GetIdentity, new { id = identity.Id }, identity.AsIdentityDto());
             });
 
@@ -146,7 +149,7 @@ namespace LimbusIdentityApi.Endpoints
                 }
 
                 dbContext.Update(identity);
-                logger.LogInformation("The Identity {name} was updated with Id {id}.", identity.Name, id);
+                logger.LogInformation("The Identity {name} {sinner} was updated with Id {id}.", identity.Name, identity.Sinner, id);
                 await dbContext.SaveChangesAsync();
 
                 return Results.NoContent();

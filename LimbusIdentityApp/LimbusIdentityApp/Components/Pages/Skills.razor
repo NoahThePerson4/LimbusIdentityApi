@@ -1,0 +1,97 @@
+﻿@page "/skills"
+@using LimbusIdentityApp.Clients
+@using LimbusIdentityApp.Models
+@inject SkillClient SkillClient
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+@if (skills is null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <div class="row mb-4">
+        <div class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Search Skills" @bind="searchString"
+                   @bind:event="oninput" @onkeyup="OnSearchChangedAsync" />
+        </div>
+    </div>
+
+    <table class="table table-striped table table-hover mt-3">
+        <thead>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Sin</th>
+            <th>Min Roll</th>
+            <th>Max Roll</th>
+            <th>Skill Effect</th>
+            <th>Coin Count</th>
+            <th>Coin Effects</th>
+        </thead>
+        <tbody>
+            @foreach(var skill in skills)
+            {
+                <tr>
+                    <td>@skill.Id</td>
+                    <td>@skill.Name</td>
+                    <td>@skill.Type</td>
+                    <td>@skill.Sin</td>
+                    <td>@skill.MinRoll</td>
+                    <td>@skill.MaxRoll</td>
+                    <td>@skill.SkillEffect</td>
+                    <td>@skill.CoinEffects.Count() Coins</td>
+                    <td>@string.Join(", ",skill.CoinEffects)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button class="btn @GetButtonClass(page <= 1)" @onclick="SelectedPageDownAsync" disabled="@((page <= 1))">Previous Page</button>
+    <button class="btn @GetButtonClass(skills?.Length < 10)" @onclick="SelectedPageUpAsync" disabled="@((skills?.Length < 10))">Next Page</button>
+}
+
+@code {
+    private SkillSummary[]? skills;
+
+    protected override async Task OnInitializedAsync()
+    {
+        skills = await SkillClient.GetSkillsAsync(PageNumber: 1, PageSize: 10);
+    }
+
+    private string GetButtonClass(bool isDisabled)
+    {
+        return isDisabled ? "btn-disabled" : "btn-primary";
+    }
+
+    int page = 1;
+    private string? searchString;
+
+    private async Task SelectedPageUpAsync()
+    {
+        int selectedPage = page + 1;
+        page = selectedPage;
+        skills = await SkillClient.GetSkillsAsync(PageNumber: selectedPage, PageSize: 10);
+    }
+
+    private async Task SelectedPageDownAsync()
+    {
+        int selectedPage = page - 1;
+
+        if (selectedPage < 1)
+        {
+            selectedPage = 1;
+        }
+
+        page = selectedPage;
+        skills = await SkillClient.GetSkillsAsync(PageNumber: selectedPage, PageSize: 10);
+    }
+
+    private async Task OnSearchChangedAsync()
+    {
+        page = 1;
+        skills = await SkillClient.GetSkillsAsync(Filter: searchString, PageNumber: 1, PageSize: 10);
+    }
+}

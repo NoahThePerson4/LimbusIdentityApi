@@ -18,7 +18,7 @@ namespace LimbusIdentityApi.Endpoints
                 var passives = new List<Passive>();
                 if (passiveDto.filter is not null)
                 {
-                     passives = await dbContext.Passives.Where(passive => passive.Name.Contains(passiveDto.filter))
+                     passives = await dbContext.Passives.Where(passive => passive.Name.Contains(passiveDto.filter) || passive.Description.Contains(passiveDto.filter) || passive.Cost.Contains(passiveDto.filter))
                     .OrderBy(passive => passive.Id)
                     .Skip((passiveDto.pageNumber - 1) * passiveDto.pageSize)
                     .Take(passiveDto.pageSize)

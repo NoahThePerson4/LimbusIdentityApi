@@ -1,4 +1,5 @@
 using LimbusIdentityApp.Client.Pages;
+using LimbusIdentityApp.Clients;
 using LimbusIdentityApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +9,17 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-var LimbusEnemyUrl = builder.Configuration["LimbusIdentityUrl"] ??
+var LimbusIdentityUrl = builder.Configuration["LimbusIdentityUrl"] ??
     throw new Exception("LimbusIdentityUrl is not set");
+
+builder.Services.AddHttpClient<PassiveClient>(
+    client => client.BaseAddress = new Uri(LimbusIdentityUrl));
+
+builder.Services.AddHttpClient<SkillClient>(
+    client => client.BaseAddress = new Uri(LimbusIdentityUrl));
+
+builder.Services.AddHttpClient<IdentityClient>(
+    client => client.BaseAddress = new Uri(LimbusIdentityUrl));
 
 var app = builder.Build();
 
