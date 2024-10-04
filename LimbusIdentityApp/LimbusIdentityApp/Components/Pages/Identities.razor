@@ -39,19 +39,32 @@ else
         <tbody>
             @foreach(var id in ids)
             {
+                string sinnerColor = id.Name switch
+                {
+                    var name when name.Contains("Zwei Association", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
+                    var name when name.Contains("Shi Association", StringComparison.OrdinalIgnoreCase) => "color:red",
+                    var name when name.Contains("Cinq Association", StringComparison.OrdinalIgnoreCase) => "color:blue",
+                    var name when name.Contains("Liu Association", StringComparison.OrdinalIgnoreCase) => "color:orange",
+                    var name when name.Contains("Seven Association", StringComparison.OrdinalIgnoreCase) => "color:forestgreen",
+                    var name when name.Contains("Devyat Association", StringComparison.OrdinalIgnoreCase) => "color:mediumseagreen",
+                    var name when name.Contains("Dieci Association", StringComparison.OrdinalIgnoreCase) => "color:goldenrod",
+                    var name when name.Contains("Oufi Association", StringComparison.OrdinalIgnoreCase) => "color:purple",
+                    _ => "color:black"
+                };
+
                 <tr>
                     <td style="text-align: center; vertical-align: bottom; padding: 0; margin: 0;">
                         <img class="" src="@id.Image" alt="Card image cap" style="max-width: 30%; max-height: 30%;">
                     </td>
-                    <td>@id.Id</td>
-                    <td>@id.Name</td>
-                    <td>@id.Sinner</td>
+                    <td style="@sinnerColor">@id.Id</td>
+                    <td style="@sinnerColor">@id.Name</td>
+                    <td style="@sinnerColor">@id.Sinner</td>
                     <td>@id.Health</td>
                     <td>@id.DefenseLevel</td>
                     <td>@id.MinSpeed</td>
                     <td>@id.MaxSpeed</td>
-                    <td>@string.Join(", ",id.PassivesName)</td>
-                    <td>@string.Join(", ",id.SkillNames)</td>
+                    <td style="@sinnerColor">@string.Join(", ", id.PassivesName)</td>
+                    <td style="@sinnerColor">@string.Join(", ", id.SkillNames)</td>
                     <td>
                         <div>
                             <a class="btn btn-primary me-2" role="button" href="/identity/@id.Id">

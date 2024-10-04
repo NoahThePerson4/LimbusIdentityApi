@@ -6,7 +6,8 @@
 @attribute [StreamRendering]
 
 <PageTitle>SevenAssociation</PageTitle>
-
+<div style="background-color: forestgreen; height: 54vh;">
+<h1>Seven Association</h1>
 @if (ids is null)
 {
     <div class="spinner-border" role="status">
@@ -15,7 +16,6 @@
 }
 else
 {
-    <h1>Seven Association</h1>
     <text>The Seven Association specializes in investigation, and can be described most similarly to detectives or private investigators. However, they will also actively solve the problems they are contracted to investigate, such as executing the criminal behind a murder. In terms of workload, the Seven Association is noted as relatively tame compared to most other Associations.</text>
     <div></div>
     <img class="" src="https://limbuscompany.wiki.gg/images/4/49/Seven_Assoc._South_Section_6_Yi_Sang_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
@@ -70,7 +70,7 @@ else
         </tbody>
     </table>
 }
-
+</div>
 @code {
     private IdentitySummary[]? ids;
 

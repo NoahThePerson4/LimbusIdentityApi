@@ -67,7 +67,7 @@ else
            <thead class="table-dark">
                <tr>
                <th>Passive Id</th>
-               <th style="color:forestgreen">Passive Name</th>
+               <th>Passive Name</th>
                <th>Passive Cost</th>
                <th>Passive Description</th>
                 </tr>
@@ -176,8 +176,14 @@ else
 
             ColorMain = identity.Name switch
             {
-                var name when name.Contains("Seven Association", StringComparison.OrdinalIgnoreCase) => "color:forestgreen",
+                var name when name.Contains("Zwei Association", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
+                var name when name.Contains("Shi Association", StringComparison.OrdinalIgnoreCase) => "color:red",
+                var name when name.Contains("Cinq Association", StringComparison.OrdinalIgnoreCase) => "color:blue",
                 var name when name.Contains("Liu Association", StringComparison.OrdinalIgnoreCase) => "color:orange",
+                var name when name.Contains("Seven Association", StringComparison.OrdinalIgnoreCase) => "color:forestgreen",
+                var name when name.Contains("Devyat Association", StringComparison.OrdinalIgnoreCase) => "color:mediumseagreen",
+                var name when name.Contains("Dieci Association", StringComparison.OrdinalIgnoreCase) => "color:goldenrod",
+                var name when name.Contains("Oufi Association", StringComparison.OrdinalIgnoreCase) => "color:purple",
                 _ => ColorMain
             };
         }

@@ -1,22 +1,18 @@
-﻿@page "/Association/Liu"
+﻿@page "/Association/Shi"
 @using LimbusIdentityApp.Clients
 @using LimbusIdentityApp.Models
 @inject IdentityClient IdentityClient
 @rendermode InteractiveServer
 @attribute [StreamRendering]
 
-<PageTitle>Liu Association</PageTitle>
-<div style="background-color: orange; height: 100vh;">
-<h1>Liu Association</h1>
+<PageTitle>Shi Association</PageTitle>
+<div style="background-color: darkred; height: 100vh;">
+<h1>Shi Association</h1>
 <div></div>
-    <img class="" src="https://limbuscompany.wiki.gg/images/3/31/Liu_Assoc._South_Section_6_Gregor_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/2/28/Liu_Assoc._South_Section_6_Meursault_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/2/2c/Liu_Assoc._South_Section_5_Hong_Lu_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/5/56/Liu_Assoc._South_Section_4_Ry%C5%8Dsh%C5%AB_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-<div></div>
-    <img class="" src="https://limbuscompany.wiki.gg/images/6/68/Liu_Assoc._South_Section_4_Ishmael_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/1/1c/Liu_Assoc._South_Section_4_Director_Rodion_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-@if(ids is null)
+    <img class="" src="https://limbuscompany.wiki.gg/images/0/0f/Shi_Assoc._South_Section_5_Heathcliff_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/f/fa/Shi_Assoc._South_Section_5_Ishmael_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/0/0d/Shi_Assoc._South_Section_5_Director_Don_Quixote_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+@if (ids is null)
 {
     <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -39,9 +35,9 @@ else
             </tr>
         </thead>
         <tbody>
-            
-                @foreach(var id in ids)
-                {
+
+            @foreach (var id in ids)
+            {
                 <tr>
                     <td style="text-align: center; vertical-align: bottom; padding: 0; margin: 0;">
                         <img class="" src="@id.Image" alt="Card image cap" style="max-width: 30%; max-height: 30%;">
@@ -63,16 +59,17 @@ else
                         </div>
                     </td>
                 </tr>
-                }
+            }
         </tbody>
     </table>
 }
 </div>
+
 @code {
     private IdentitySummary[]? ids;
 
     protected override async Task OnInitializedAsync()
     {
-        ids = await IdentityClient.GetIdentitiesAsync(Filter: "Liu Association", PageNumber: 1, PageSize: 10);
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: "Shi Association", PageNumber: 1, PageSize: 10);
     }
 }
