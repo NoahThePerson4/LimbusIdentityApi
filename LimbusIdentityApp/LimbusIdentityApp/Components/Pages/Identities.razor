@@ -5,6 +5,8 @@
 @rendermode InteractiveServer
 @attribute [StreamRendering]
 
+<PageTitle>Identities</PageTitle>
+
 @if (ids is null)
 {
     <div class="spinner-border" role="status">
@@ -32,6 +34,7 @@ else
             <th>Max Speed</th>
             <th>Passive Names</th>
             <th>Skill Names</th>
+            <th>Details</th>
         </thead>
         <tbody>
             @foreach(var id in ids)
@@ -49,6 +52,13 @@ else
                     <td>@id.MaxSpeed</td>
                     <td>@string.Join(", ",id.PassivesName)</td>
                     <td>@string.Join(", ",id.SkillNames)</td>
+                    <td>
+                        <div>
+                            <a class="btn btn-primary me-2" role="button" href="/identity/@id.Id">
+                                <i class="bi bi-search">Details</i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
             }
         </tbody>

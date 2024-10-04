@@ -11,6 +11,7 @@
         public int MaxSpeed { get; set; }
         public string? Image { get; set; }
         public List<int> PassiveIds { get; set; }
+        public List<string> PassiveNames { get; set; }
         public List<string?> PassiveCosts { get; set; }
         public List<string> PassiveDescription { get; set; }
         public List<int> SkillIds { get; set; }

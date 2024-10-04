@@ -1,0 +1,185 @@
+﻿@page "/identity"
+@page "/identity/{Id:int}"
+@using LimbusIdentityApp.Clients
+@using LimbusIdentityApp.Models
+@inject IdentityClient IDClient
+@inject SkillClient SkillClient
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+<PageTitle>@Title</PageTitle>
+
+<div class="mt-2">
+    <a class="btn btn-primary" role="button" href="/identities">Identities</a>
+</div>
+
+@if (identity is null)
+{
+    <div><em>Loading...</em></div>
+}
+else
+{
+    <table class="table table-striped table table-hover mt-3">
+        <thead class="table-dark">
+        
+        <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Sinner</th>
+        <th>Health</th>
+        <th>DefenseLevel</th>
+        <th>MinSpeed</th>
+        <th>MaxSpeed</th>
+        <th>Passive Ids</th>
+        <th>Skill Ids</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="@ColorMain">@identity.Id</td>
+                <td style="@ColorMain">@identity.Name</td>
+                <td style="@ColorMain">@identity.Sinner</td>
+                <td>@identity.Health</td>
+                <td>@identity.DefenseLevel</td>
+                <td>@identity.MinSpeed</td>
+                <td>@identity.MaxSpeed</td>
+                <td>@string.Join(", ",identity.PassiveIds)</td>
+                <td>@string.Join(", ", identity.SkillIds)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    @for (var i = 0; i < identity.PassiveIds.Count(); i++)
+    {
+        string passiveColor = identity.PassiveCosts[i] switch
+        {
+            var name when name.Contains("Wrath", StringComparison.OrdinalIgnoreCase) => "color:red",
+            var name when name.Contains("Lust", StringComparison.OrdinalIgnoreCase) => "color:orange",
+            var name when name.Contains("Sloth", StringComparison.OrdinalIgnoreCase) => "color:goldenrod",
+            var name when name.Contains("Gluttony", StringComparison.OrdinalIgnoreCase) => "color:forestgreen",
+            var name when name.Contains("Pride", StringComparison.OrdinalIgnoreCase) => "color:blue",
+            var name when name.Contains("Gloom", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
+            var name when name.Contains("Envy", StringComparison.OrdinalIgnoreCase) => "color:purple",
+            _ => "color:black"
+        };
+
+       <table class="table table-striped table table-hover mt-3">
+           <thead class="table-dark">
+               <tr>
+               <th>Passive Id</th>
+               <th style="color:forestgreen">Passive Name</th>
+               <th>Passive Cost</th>
+               <th>Passive Description</th>
+                </tr>
+           </thead>
+           <tbody>
+               <tr>
+                    <td style="@ColorMain">@identity.PassiveIds[i]</td>
+                    <td>@identity.PassiveNames[i]</td>
+                    <td style="@passiveColor">@identity.PassiveCosts[i]</td>
+                    <td>@identity.PassiveDescription[i]</td>
+               </tr>
+           </tbody>
+        </table>
+    }
+   
+
+ <div class="table-container">
+    @foreach (var skill in Skills)
+    {
+            string skillColor = skill.Sin switch
+            {
+                var name when name.Contains("Wrath", StringComparison.OrdinalIgnoreCase) => "color:red",
+                var name when name.Contains("Lust", StringComparison.OrdinalIgnoreCase) => "color:orange",
+                var name when name.Contains("Sloth", StringComparison.OrdinalIgnoreCase) => "color:goldenrod",
+                var name when name.Contains("Gluttony", StringComparison.OrdinalIgnoreCase) => "color:forestgreen",
+                var name when name.Contains("Pride", StringComparison.OrdinalIgnoreCase) => "color:blue",
+                var name when name.Contains("Gloom", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
+                var name when name.Contains("Envy", StringComparison.OrdinalIgnoreCase) => "color:purple",
+                _ => "color:black"
+            };
+
+        <div class="table-wrapper">
+        <table class="table table-striped table table-hover mt-4">
+            <thead class="table-dark">
+                <tr>
+                    <th colspan="2">@skill.Name</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Skill Type</td>
+                    <td>@skill.Type</td>
+                </tr>
+                <tr>
+                    <td>Skill Sin</td>
+                    <td style="@skillColor">@skill.Sin</td>
+                </tr>
+                <tr>
+                    <td>@skill.MinRoll</td>
+                    <td>@skill.MaxRoll</td>
+                </tr>
+                <tr>
+                    <td>Skill Effect</td>
+                    <td>@skill.SkillEffect</td>
+                </tr>
+
+                @for (int i = 0; i < skill.CoinEffects.Count(); i++)
+                {
+                    <tr>
+                        <td>Coin @(i + 1)</td>
+                        <td>@skill.CoinEffects[i]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+      </div>
+    }
+ </div>    
+}
+
+@code {
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    public Models.IdentityDetails? identity { get; set; }
+
+    public List<Models.SkillDetails> Skills { get; set; } = new List<Models.SkillDetails>();
+
+    string Title = "Identity";
+
+    string ColorMain = "color:black";
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if(identity is not null)
+        {
+            return;
+        }
+
+        if (Id is not null)
+        {
+            identity = await IDClient.GetIdentityAsync(Id.Value);
+
+            foreach(var skillId in identity.SkillIds)
+            {
+                var skill = await SkillClient.GetSkillAsync(skillId);
+                if(skill is not null)
+                {
+                    Skills.Add(skill);
+                }
+            }
+
+            Title = string.Join(" ",identity.Name, identity.Sinner);
+
+            ColorMain = identity.Name switch
+            {
+                var name when name.Contains("Seven Association", StringComparison.OrdinalIgnoreCase) => "color:forestgreen",
+                var name when name.Contains("Liu Association", StringComparison.OrdinalIgnoreCase) => "color:orange",
+                _ => ColorMain
+            };
+        }
+    }
+}

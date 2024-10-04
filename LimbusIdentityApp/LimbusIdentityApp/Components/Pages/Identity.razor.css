@@ -1,0 +1,22 @@
+﻿.table-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.table-wrapper {
+    flex:1;
+    margin: 0 20px;
+    min-width:250px;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table th, .table td {
+     border: 1px solid #000;
+     padding: 8px;
+     text-align: left;
+}
