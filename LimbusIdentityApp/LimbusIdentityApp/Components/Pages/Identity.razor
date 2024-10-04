@@ -19,6 +19,10 @@
 }
 else
 {
+    <div class="mt-2">
+        <a class="btn btn-primary" role="button" href="@Faction">@FactionTitle</a>
+    </div>
+
     <table class="table table-striped table table-hover mt-3">
         <thead class="table-dark">
         
@@ -60,7 +64,7 @@ else
             var name when name.Contains("Pride", StringComparison.OrdinalIgnoreCase) => "color:blue",
             var name when name.Contains("Gloom", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
             var name when name.Contains("Envy", StringComparison.OrdinalIgnoreCase) => "color:purple",
-            _ => "color:black"
+            _ => "color:silver"
         };
 
        <table class="table table-striped table table-hover mt-3">
@@ -152,6 +156,10 @@ else
 
     string ColorMain = "color:black";
 
+    string Faction = "/identities";
+
+    string FactionTitle = "Unknown";
+
     protected async override Task OnParametersSetAsync()
     {
         if(identity is not null)
@@ -185,6 +193,32 @@ else
                 var name when name.Contains("Dieci Association", StringComparison.OrdinalIgnoreCase) => "color:goldenrod",
                 var name when name.Contains("Oufi Association", StringComparison.OrdinalIgnoreCase) => "color:purple",
                 _ => ColorMain
+            };
+
+            Faction = identity.Name switch
+            {
+                var name when name.Contains("Zwei Association", StringComparison.OrdinalIgnoreCase) => "/Association/Zwei",
+                var name when name.Contains("Shi Association", StringComparison.OrdinalIgnoreCase) => "/Association/Shi",
+                var name when name.Contains("Cinq Association", StringComparison.OrdinalIgnoreCase) => "/Association/Cinq",
+                var name when name.Contains("Liu Association", StringComparison.OrdinalIgnoreCase) => "/Association/Liu",
+                var name when name.Contains("Seven Association", StringComparison.OrdinalIgnoreCase) => "/Association/Seven",
+                var name when name.Contains("Devyat Association", StringComparison.OrdinalIgnoreCase) => "/Association/Devyat",
+                var name when name.Contains("Dieci Association", StringComparison.OrdinalIgnoreCase) => "/Association/Dieci",
+                var name when name.Contains("Oufi Association", StringComparison.OrdinalIgnoreCase) => "/Association/Oufi",
+                _ => "/identities"
+            };
+
+            FactionTitle = identity.Name switch
+            {
+                var name when name.Contains("Zwei Association", StringComparison.OrdinalIgnoreCase) => "Zwei Association",
+                var name when name.Contains("Shi Association", StringComparison.OrdinalIgnoreCase) => "Shi Association",
+                var name when name.Contains("Cinq Association", StringComparison.OrdinalIgnoreCase) => "Cinq Association",
+                var name when name.Contains("Liu Association", StringComparison.OrdinalIgnoreCase) => "Liu Association",
+                var name when name.Contains("Seven Association", StringComparison.OrdinalIgnoreCase) => "Seven Association",
+                var name when name.Contains("Devyat Association", StringComparison.OrdinalIgnoreCase) => "Devyat Association",
+                var name when name.Contains("Dieci Association", StringComparison.OrdinalIgnoreCase) => "Dieci Association",
+                var name when name.Contains("Oufi Association", StringComparison.OrdinalIgnoreCase) => "Oufi Association",
+                _ => identity.Name
             };
         }
     }

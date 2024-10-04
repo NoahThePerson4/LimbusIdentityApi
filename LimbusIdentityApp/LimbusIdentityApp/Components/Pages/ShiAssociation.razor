@@ -6,12 +6,16 @@
 @attribute [StreamRendering]
 
 <PageTitle>Shi Association</PageTitle>
-<div style="background-color: darkred; height: 100vh;">
+<div style="background-color: darkred; height: 30vh;">
 <h1>Shi Association</h1>
+    <div class="mt-2">
+        <a class="btn btn-primary" role="button" href="/Association">Associations</a>
+    </div>
 <div></div>
     <img class="" src="https://limbuscompany.wiki.gg/images/0/0f/Shi_Assoc._South_Section_5_Heathcliff_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
     <img class="" src="https://limbuscompany.wiki.gg/images/f/fa/Shi_Assoc._South_Section_5_Ishmael_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
     <img class="" src="https://limbuscompany.wiki.gg/images/0/0d/Shi_Assoc._South_Section_5_Director_Don_Quixote_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+</div>
 @if (ids is null)
 {
     <div class="spinner-border" role="status">
@@ -63,7 +67,6 @@ else
         </tbody>
     </table>
 }
-</div>
 
 @code {
     private IdentitySummary[]? ids;

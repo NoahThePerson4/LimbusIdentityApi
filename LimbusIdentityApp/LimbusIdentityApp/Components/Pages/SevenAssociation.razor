@@ -6,16 +6,11 @@
 @attribute [StreamRendering]
 
 <PageTitle>SevenAssociation</PageTitle>
-<div style="background-color: forestgreen; height: 54vh;">
-<h1>Seven Association</h1>
-@if (ids is null)
-{
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+<div style="background-color: forestgreen; height: 60vh;">
+    <h1>Seven Association</h1>
+    <div class="mt-2">
+        <a class="btn btn-primary" role="button" href="/Association">Associations</a>
     </div>
-}
-else
-{
     <text>The Seven Association specializes in investigation, and can be described most similarly to detectives or private investigators. However, they will also actively solve the problems they are contracted to investigate, such as executing the criminal behind a murder. In terms of workload, the Seven Association is noted as relatively tame compared to most other Associations.</text>
     <div></div>
     <img class="" src="https://limbuscompany.wiki.gg/images/4/49/Seven_Assoc._South_Section_6_Yi_Sang_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
@@ -26,6 +21,16 @@ else
     <img class="" src="https://limbuscompany.wiki.gg/images/9/99/Seven_Assoc._South_Section_4_Faust_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
     <div></div>
     <text>The Seven Association also has gluttony as their main sin affinity. They vary in their gameplay styles usually focusing on a debuff of some kind like Rupture.</text>
+</div>
+
+@if (ids is null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
     <table class="table table-striped table table-hover mt-3">
         <thead>
             <tr>
@@ -70,7 +75,7 @@ else
         </tbody>
     </table>
 }
-</div>
+
 @code {
     private IdentitySummary[]? ids;
 

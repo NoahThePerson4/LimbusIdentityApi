@@ -6,14 +6,18 @@
 @attribute [StreamRendering]
 
 <PageTitle>Dieci Association</PageTitle>
-<div style="background-color: goldenrod; height: 100vh;">
+<div style="background-color: goldenrod; height: 50vh;">
 <h1>Dieci Association</h1>
+    <div class="mt-2">
+        <a class="btn btn-primary" role="button" href="/Association">Associations</a>
+    </div>
 <div></div>
     <img class="" src="https://limbuscompany.wiki.gg/images/7/72/Dieci_Assoc._South_Section_4_Yi_Sang_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
     <div></div>
     <img class="" src="https://limbuscompany.wiki.gg/images/d/d1/Dieci_Assoc._South_Section_4_Rodion_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
     <img class="" src="https://limbuscompany.wiki.gg/images/9/9c/Dieci_Assoc._South_Section_4_Hong_Lu_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
     <img class="" src="https://limbuscompany.wiki.gg/images/c/c5/Dieci_Assoc._South_Section_4_Director_Meursault_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+</div>
 @if (ids is null)
 {
     <div class="spinner-border" role="status">
@@ -65,7 +69,6 @@ else
         </tbody>
     </table>
 }
-</div>
 
 @code {
     private IdentitySummary[]? ids;

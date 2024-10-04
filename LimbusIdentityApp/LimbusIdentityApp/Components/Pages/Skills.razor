@@ -37,11 +37,23 @@ else
         <tbody>
             @foreach(var skill in skills)
             {
+                string skillColor = skill.Sin switch
+                {
+                    var name when name.Contains("Wrath", StringComparison.OrdinalIgnoreCase) => "color:red",
+                    var name when name.Contains("Lust", StringComparison.OrdinalIgnoreCase) => "color:orange",
+                    var name when name.Contains("Sloth", StringComparison.OrdinalIgnoreCase) => "color:goldenrod",
+                    var name when name.Contains("Gluttony", StringComparison.OrdinalIgnoreCase) => "color:forestgreen",
+                    var name when name.Contains("Pride", StringComparison.OrdinalIgnoreCase) => "color:blue",
+                    var name when name.Contains("Gloom", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
+                    var name when name.Contains("Envy", StringComparison.OrdinalIgnoreCase) => "color:purple",
+                    _ => "color:silver"
+                };
+
                 <tr>
-                    <td>@skill.Id</td>
+                    <td style="@skillColor">@skill.Id</td>
                     <td>@skill.Name</td>
                     <td>@skill.Type</td>
-                    <td>@skill.Sin</td>
+                    <td style="@skillColor">@skill.Sin</td>
                     <td>@skill.MinRoll</td>
                     <td>@skill.MaxRoll</td>
                     <td>@skill.SkillEffect</td>
