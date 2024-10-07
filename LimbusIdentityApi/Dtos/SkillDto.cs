@@ -2,6 +2,7 @@
 {
     public record SkillDto(
         int Id,
+        string? Image,
         string Name,
         string? Type,
         string? Sin,

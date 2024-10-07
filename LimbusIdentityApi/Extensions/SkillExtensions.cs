@@ -9,6 +9,7 @@ namespace LimbusIdentityApi.Extensions
         {
             return new SkillDto(
                 skill.Id,
+                skill.Image,
                 skill.Name,
                 skill.Type,
                 skill.Sin,

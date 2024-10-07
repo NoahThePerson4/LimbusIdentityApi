@@ -59,6 +59,7 @@ namespace LimbusIdentityApi.Endpoints
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
                 Skill skill = new()
                 {
+                    Image = skillDto.Image,
                     Name = skillDto.Name,
                     Type = skillDto.Type,
                     Sin = skillDto.Sin,
@@ -86,6 +87,7 @@ namespace LimbusIdentityApi.Endpoints
                     return Results.NotFound("No Skill with that Id exists!");
                 }
 
+                skill.Image = updateSkillDto.Image;
                 skill.Name = updateSkillDto.Name;
                 skill.Type = updateSkillDto.Type;
                 skill.Sin = updateSkillDto.Sin;
