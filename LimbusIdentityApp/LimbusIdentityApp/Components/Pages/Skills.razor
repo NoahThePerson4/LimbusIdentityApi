@@ -57,6 +57,13 @@ else
                     <td>@skill.MinRoll</td>
                     <td>@skill.MaxRoll</td>
                     <td>@skill.SkillEffect</td>
+                    <td>
+                        <div>
+                            <a class="btn btn-primary me-2" role="button" href="/edit/skill/@skill.Id">
+                                <i class="bi bi-search">Edit</i>
+                            </a>
+                        </div>
+                    </td>
                     <td>@skill.CoinEffects.Count() Coins</td>
                     <td>@string.Join(", ",skill.CoinEffects)</td>
                 </tr>

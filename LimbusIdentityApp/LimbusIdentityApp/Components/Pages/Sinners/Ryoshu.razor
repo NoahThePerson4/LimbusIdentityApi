@@ -1,23 +1,14 @@
-﻿@page "/Association/Dieci"
+﻿@page "/Sinner/Ryoshu"
 @using LimbusIdentityApp.Clients
 @using LimbusIdentityApp.Models
 @inject IdentityClient IdentityClient
 @rendermode InteractiveServer
 @attribute [StreamRendering]
 
-<PageTitle>Dieci Association</PageTitle>
-<div style="background-color: goldenrod; height: auto;">
-<h1>Dieci Association</h1>
-    <div class="mt-2">
-        <a class="btn btn-primary" role="button" href="/Association">Associations</a>
-    </div>
-<div></div>
-    <img class="" src="https://limbuscompany.wiki.gg/images/7/72/Dieci_Assoc._South_Section_4_Yi_Sang_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <div></div>
-    <img class="" src="https://limbuscompany.wiki.gg/images/d/d1/Dieci_Assoc._South_Section_4_Rodion_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/9/9c/Dieci_Assoc._South_Section_4_Hong_Lu_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/c/c5/Dieci_Assoc._South_Section_4_Director_Meursault_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-</div>
+<PageTitle>Ryoshu</PageTitle>
+<a class="btn btn-primary me-2" role="button" href="/Sinner">
+    <i class="bi bi-search">Sinners</i>
+</a>
 @if (ids is null)
 {
     <div class="spinner-border" role="status">
@@ -76,6 +67,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ids = await IdentityClient.GetIdentitiesAsync(Filter: "Dieci Association", PageNumber: 1, PageSize: 10);
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: "Ryoshu", PageNumber: 1, PageSize: 10);
     }
 }
