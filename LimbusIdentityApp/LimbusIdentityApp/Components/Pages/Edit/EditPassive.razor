@@ -1,0 +1,87 @@
+﻿@page "/edit/passive"
+@page "/edit/passive/{id:int}"
+@using LimbusIdentityApp.Clients
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject PassiveClient PassiveClient
+
+<div class="mt-2">
+    <a class="btn btn-primary" role="button" href="/passives">Return</a>
+</div>
+
+@if (passive is null)
+{
+    <p><em>Loading...</em></p>
+    <PageTitle>Passive</PageTitle>
+}
+else
+{
+    <PageTitle>Passive @passive.Name</PageTitle>
+
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@passive"
+                      FormName="EditPassive"
+                      OnValidSubmit="HandleSubmit">
+                <div>
+                    <label for="Name" class="form-label">Name:</label>
+                    <InputText id="Name" @bind-Value="passive.Name" class="form-control" />
+                    <ValidationMessage For="()=> passive.Name" />
+                </div>
+                <div>
+                    <label for="Cost" class="form-label">Cost:</label>
+                    <InputText id="Cost" @bind-Value="passive.Cost" class="form-control" />
+                    <ValidationMessage For="()=> passive.Cost" />
+                </div>
+                <div>
+                    <label for="Description" class="form-label">Description:</label>
+                    <InputText id="Description" @bind-Value="passive.Description" class="form-control" />
+                    <ValidationMessage For="()=> passive.Description" />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a class="btn btn-danger" role="button" href="/passives">Cancel</a>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Models.PassiveDetails? passive { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (passive is not null)
+        {
+            return;
+        }
+        if (Id is not null)
+        {
+            passive = await PassiveClient.GetPassiveAsync(id: Id.Value);
+            if(passive is null)
+            {
+                NavigationManager.NavigateTo("/notfound");
+            }
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        ArgumentNullException.ThrowIfNull(passive);
+
+        if (Id is null)
+        {
+            return;
+        }
+        else
+        {
+            passive.Id = Id.Value;
+            await PassiveClient.UpdatePassiveAsync(passive);
+        }
+
+        NavigationManager.NavigateTo("/passives");
+    }
+}
