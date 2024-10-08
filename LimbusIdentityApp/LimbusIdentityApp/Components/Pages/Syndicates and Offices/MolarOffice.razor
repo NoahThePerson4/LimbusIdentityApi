@@ -1,0 +1,82 @@
+﻿@page "/City/MolarOffice"
+@using LimbusIdentityApp.Clients
+@using LimbusIdentityApp.Models
+@inject IdentityClient IdentityClient
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+<PageTitle>Molar Office/Molar Boatworks Office</PageTitle>
+<div>
+    <h1>Molar Office / Molar Boatworks Office</h1>
+    <a class="btn btn-primary me-2" role="button" href="/City">
+        <i class="bi bi-search">Syndicates and Offices</i>
+    </a>
+    <div></div>
+    <img class="" src="https://limbuscompany.wiki.gg/images/3/32/Molar_Office_Fixer_Yi_Sang_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/f/ff/Molar_Boatworks_Fixer_Sinclair_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <div></div>
+    <img class="" src="https://limbuscompany.wiki.gg/images/3/35/Molar_Office_Fixer_Outis_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/9/9a/Molar_Boatworks_Fixer_Ishmael_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+</div>
+@if (ids is null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <table class="table table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Image</th>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Sinner</th>
+                <th>Health</th>
+                <th>Defense Level</th>
+                <th>Min Speed</th>
+                <th>Max Speed</th>
+                <th>Passive Names</th>
+                <th>Skill Names</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var id in ids)
+            {
+                <tr>
+                    <td style="text-align: center; vertical-align: bottom; padding: 0; margin: 0;">
+                        <img class="" src="@id.Image" alt="Card image cap" style="max-width: 30%; max-height: 30%;">
+                    </td>
+                    <td>@id.Id</td>
+                    <td>@id.Name</td>
+                    <td>@id.Sinner</td>
+                    <td>@id.Health</td>
+                    <td>@id.DefenseLevel</td>
+                    <td>@id.MinSpeed</td>
+                    <td>@id.MaxSpeed</td>
+                    <td>@string.Join(", ", id.PassivesName)</td>
+                    <td>@string.Join(", ", id.SkillNames)</td>
+                    <td>
+                        <div>
+                            <a class="btn btn-primary me-2" role="button" href="/identity/@id.Id">
+                                <i class="bi bi-search">Details</i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IdentitySummary[]? ids;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: "Molar", PageNumber: 1, PageSize: 10);
+    }
+}
