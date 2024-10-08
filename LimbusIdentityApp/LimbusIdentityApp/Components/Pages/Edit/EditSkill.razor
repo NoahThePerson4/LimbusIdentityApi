@@ -9,15 +9,14 @@
     <a class="btn btn-primary" role="button" href="/skills">Return</a>
 </div>
 
+<PageTitle>@Title</PageTitle>
+
 @if (skill is null)
 {
     <p><em>Loading...</em></p>
-    <PageTitle>Edit Skill</PageTitle>
 }
 else
 {
-    <PageTitle>Edit @skill.Name</PageTitle>
-
     <div class="row">
         <div class="col-md-4">
             <EditForm Model="@skill"
@@ -92,6 +91,7 @@ else
 
     [SupplyParameterFromForm]
     private Models.SkillDetails? skill { get; set; }
+    string Title = "Edit SKill";
 
     protected override async Task OnParametersSetAsync()
     {
@@ -102,6 +102,7 @@ else
         if (Id is not null)
         {
             skill = await SkillClient.GetSkillAsync(id: Id.Value);
+            Title = $"Edit {skill.Name}";
         }
     }
 

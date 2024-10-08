@@ -15,14 +15,18 @@ namespace LimbusIdentityApp.Clients
                    $"/Identities?filter={Filter}&pageNumber={PageNumber}&pageSize={PageSize}") ?? [];
         }
 
-        public async Task AddIdentityAsync(IdentityDetails Identity)
+        public async Task AddIdentityAsync(IdentityCreate Identity)
             => await httpClient.PostAsJsonAsync("/Identities", Identity);
 
         public async Task<IdentityDetails> GetIdentityAsync(int id)
             => await httpClient.GetFromJsonAsync<IdentityDetails>($"/Identities/{id}")
             ?? throw new Exception("Could Not Find Identity!");
 
-        public async Task UpdateIdentityAsync(IdentityDetails updateIdentity)
+        public async Task<IdentityCreate> GetCreateIdentityAsync(int id)
+            => await httpClient.GetFromJsonAsync<IdentityCreate>($"/Identities/{id}")
+            ?? throw new Exception("Could Not Find Identity!");
+
+        public async Task UpdateIdentityAsync(IdentityCreate updateIdentity)
             => await httpClient.PutAsJsonAsync($"/Identities/{updateIdentity.Id}", updateIdentity);
 
         public async Task DeleteIdentityAsync(int id)

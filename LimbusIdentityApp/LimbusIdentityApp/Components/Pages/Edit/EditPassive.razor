@@ -8,16 +8,13 @@
 <div class="mt-2">
     <a class="btn btn-primary" role="button" href="/passives">Return</a>
 </div>
-
+<PageTitle>@Title</PageTitle>
 @if (passive is null)
 {
     <p><em>Loading...</em></p>
-    <PageTitle>Passive</PageTitle>
 }
 else
 {
-    <PageTitle>Passive @passive.Name</PageTitle>
-
     <div class="row">
         <div class="col-md-4">
             <EditForm Model="@passive"
@@ -51,6 +48,7 @@ else
 
     [SupplyParameterFromForm]
     private Models.PassiveDetails? passive { get; set; }
+    string Title = "Edit Passive";
 
     protected override async Task OnParametersSetAsync()
     {
@@ -65,6 +63,7 @@ else
             {
                 NavigationManager.NavigateTo("/notfound");
             }
+            Title = $"Edit {passive.Name}";
         }
     }
 
