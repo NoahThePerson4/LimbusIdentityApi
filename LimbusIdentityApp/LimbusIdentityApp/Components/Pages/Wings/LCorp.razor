@@ -1,0 +1,87 @@
+﻿@page "/Wing/LobotomyCorporation"
+@using LimbusIdentityApp.Clients
+@using LimbusIdentityApp.Models
+@inject IdentityClient IdentityClient
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+<PageTitle>Lobotomy Corporation</PageTitle>
+<div>
+    <h1>Lobotomy Corporation</h1>
+    <div class="mt-2">
+        <a class="btn btn-primary" role="button" href="/Wing">Associations</a>
+    </div>
+    <div></div>
+    <img class="" src="https://limbuscompany.wiki.gg/images/0/0b/Lobotomy_Corp._Remnant_Faust_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/0/0d/Lobotomy_E.G.O_Lantern_Don_Quixote_Full.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/b/bf/Lobotomy_E.G.O_Sloshing_Ishmael_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/2/27/Lobotomy_E.G.O_Red_Sheet_Sinclair_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <div></div>
+    <img class="" src="https://limbuscompany.wiki.gg/images/5/5b/Lobotomy_E.G.O_Solemn_Lament_Yi_Sang_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/e/e9/Lobotomy_E.G.O_Regret_Faust_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/d/de/Lobotomy_E.G.O_Red_Eyes_%26_Penitence_Ry%C5%8Dsh%C5%AB_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/f/fe/Lobotomy_E.G.O_Sunshower_Heathcliff_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/3/37/Lobotomy_E.G.O_Magic_Bullet_Outis_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+</div>
+@if (ids is null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <table class="table table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Image</th>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Sinner</th>
+                <th>Health</th>
+                <th>Defense Level</th>
+                <th>Min Speed</th>
+                <th>Max Speed</th>
+                <th>Passive Names</th>
+                <th>Skill Names</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var id in ids)
+            {
+                <tr>
+                    <td style="text-align: center; vertical-align: bottom; padding: 0; margin: 0;">
+                        <img class="" src="@id.Image" alt="Card image cap" style="max-width: 30%; max-height: 30%;">
+                    </td>
+                    <td>@id.Id</td>
+                    <td>@id.Name</td>
+                    <td>@id.Sinner</td>
+                    <td>@id.Health</td>
+                    <td>@id.DefenseLevel</td>
+                    <td>@id.MinSpeed</td>
+                    <td>@id.MaxSpeed</td>
+                    <td>@string.Join(", ", id.PassivesName)</td>
+                    <td>@string.Join(", ", id.SkillNames)</td>
+                    <td>
+                        <div>
+                            <a class="btn btn-primary me-2" role="button" href="/identity/@id.Id">
+                                <i class="bi bi-search">Details</i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IdentitySummary[]? ids;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: "Lobotomy", PageNumber: 1, PageSize: 10);
+    }
+}

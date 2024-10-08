@@ -1,0 +1,84 @@
+﻿@page "/Wing/NCorp"
+@using LimbusIdentityApp.Clients
+@using LimbusIdentityApp.Models
+@inject IdentityClient IdentityClient
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+<PageTitle>N Corp</PageTitle>
+<div>
+    <h1>N Corp</h1>
+    <div class="mt-2">
+        <a class="btn btn-primary" role="button" href="/Wing">Associations</a>
+    </div>
+    <div></div>
+    <img class="" src="https://limbuscompany.wiki.gg/images/4/44/N_Corp._Mittelhammer_Don_Quixote_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/4/42/N_Corp._Kleinhammer_Heathcliff_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/d/d6/N_Corp._Mittelhammer_Rodion_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <div></div>
+    <img class="" src="https://limbuscompany.wiki.gg/images/0/01/The_One_Who_Grips_Faust_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/c/c1/N_Corp._Gro%C3%9Fhammer_Meursault_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/b/b9/The_One_Who_Shall_Grip_Sinclair_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+</div>
+@if (ids is null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <table class="table table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Image</th>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Sinner</th>
+                <th>Health</th>
+                <th>Defense Level</th>
+                <th>Min Speed</th>
+                <th>Max Speed</th>
+                <th>Passive Names</th>
+                <th>Skill Names</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var id in ids)
+            {
+                <tr>
+                    <td style="text-align: center; vertical-align: bottom; padding: 0; margin: 0;">
+                        <img class="" src="@id.Image" alt="Card image cap" style="max-width: 30%; max-height: 30%;">
+                    </td>
+                    <td>@id.Id</td>
+                    <td>@id.Name</td>
+                    <td>@id.Sinner</td>
+                    <td>@id.Health</td>
+                    <td>@id.DefenseLevel</td>
+                    <td>@id.MinSpeed</td>
+                    <td>@id.MaxSpeed</td>
+                    <td>@string.Join(", ", id.PassivesName)</td>
+                    <td>@string.Join(", ", id.SkillNames)</td>
+                    <td>
+                        <div>
+                            <a class="btn btn-primary me-2" role="button" href="/identity/@id.Id">
+                                <i class="bi bi-search">Details</i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IdentitySummary[]? ids;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: "N Corp", PageNumber: 1, PageSize: 10);
+    }
+}

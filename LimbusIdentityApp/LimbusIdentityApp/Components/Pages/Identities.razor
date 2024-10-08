@@ -34,6 +34,7 @@ else
             <th>Passive Names</th>
             <th>Skill Names</th>
             <th>Details</th>
+            <th>Edit</th>
         </thead>
         <tbody>
             @foreach(var id in ids)
@@ -68,6 +69,13 @@ else
                         <div>
                             <a class="btn btn-primary me-2" role="button" href="/identity/@id.Id">
                                 <i class="bi bi-search">Details</i>
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <a class="btn btn-primary me-2" role="button" href="/edit/identity/id.Id">
+                                <i class="bi bi-search">Edit</i>
                             </a>
                         </div>
                     </td>

@@ -27,6 +27,7 @@ else
     <th>Id</th>
     <th>Name</th>
     <th>Cost</th>
+    <th>Edit</th>
     <th>Description</th>
     </thead>
     <tbody>
@@ -48,6 +49,13 @@ else
                     <td style="@passiveColor">@passive.Id</td>
                     <td>@passive.Name</td>
                     <td style="@passiveColor">@passive.Cost</td>
+                    <td>
+                        <div>
+                            <a class="btn btn-primary me-2" role="button" href="/edit/passive/@passive.Id">
+                                <i class="bi bi-search">Edit</i>
+                            </a>
+                        </div>
+                    </td>
                     <td>@passive.Description</td>
                 </tr>
             }
