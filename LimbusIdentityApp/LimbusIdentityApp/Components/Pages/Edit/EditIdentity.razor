@@ -18,8 +18,8 @@ else
     <div class="row">
         <div class="col-md-4">
             <EditForm Model="@ids"
-                      FormName="EditId"
-                      OnValidSubmit="HandleSubmit">
+            FormName="EditId"
+            OnValidSubmit="HandleSubmit">
                 <div>
                     <label for="Name" class="form-label">Name:</label>
                     <InputText id="Name" @bind-Value="ids.Name" class="form-control" />
@@ -58,7 +58,7 @@ else
                 <div class="mb-3">
                     <label for="Passives" class="form-label">Passive Ids:</label>
                     <div>
-                        @for(int i = 0; i < ids.PassiveIds.Count; i++)
+                        @for (int i = 0; i < ids.PassiveIds.Count; i++)
                         {
                             <div class="input-group mb-2">
                                 <InputNumber @bind-Value="ids.PassiveIds[i]" class="form-control" />
@@ -67,19 +67,19 @@ else
                                     Remove
                                 </button>
                             </div>
-                            <ValidationMessage For="() => ids.PassiveIds[i]" />  
+                            <ValidationMessage For="() => ids.PassiveIds[i]" />
                         }
                         <button type="button" class="btn btn-primary" @onclick="AddPassive">Add Passive</button>
                     </div>
                 </div>
                 <div class="input-group mt-2">
-                        <label for="newPassive" class="form-label">New Passive Value:</label>
-                        <InputNumber id="newAbility" @bind-Value="newPassiveValue" class="form-control" />
+                    <label for="newPassive" class="form-label">New Passive Value:</label>
+                    <InputNumber id="newAbility" @bind-Value="newPassiveValue" class="form-control" />
                 </div>
-                 <div class="mb-3">
+                <div class="mb-3">
                     <label for="Skills" class="form-label">Skill Ids:</label>
                     <div>
-                        @for(int i = 0; i < ids.SkillIds.Count; i++)
+                        @for (int i = 0; i < ids.SkillIds.Count; i++)
                         {
                             <div class="input-group mb-2">
                                 <InputNumber @bind-Value="ids.SkillIds[i]" class="form-control" />
@@ -88,14 +88,14 @@ else
                                     Remove
                                 </button>
                             </div>
-                            <ValidationMessage For="() => ids.SkillIds[i]" />           
+                            <ValidationMessage For="() => ids.SkillIds[i]" />
                         }
                         <button type="button" class="btn btn-primary" @onclick="AddSkill">Add Skill</button>
                     </div>
                 </div>
                 <div class="input-group mt-2">
-                        <label for="newSkill" class="form-label">New Skill Value:</label>
-                        <InputNumber id="newSkill" @bind-Value="newSkillValue" class="form-control" />
+                    <label for="newSkill" class="form-label">New Skill Value:</label>
+                    <InputNumber id="newSkill" @bind-Value="newSkillValue" class="form-control" />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <a class="btn btn-danger" role="button" href="/identities">Cancel</a>
@@ -112,6 +112,7 @@ else
     private Models.IdentityCreate? ids { get; set; }
     string Title = "Edit Id";
 
+
     protected override async Task OnParametersSetAsync()
     {
         if (ids is not null)
@@ -120,15 +121,17 @@ else
         }
         if (Id is not null)
         {
-            ids = await IdentityClient.GetCreateIdentityAsync(id: Id.Value);
-            if(ids is null)
+            try
+            {
+                ids = await IdentityClient.GetCreateIdentityAsync(id: Id.Value);
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 NavigationManager.NavigateTo("/notfound");
             }
             Title = $"Edit {ids.Name}";
-        }
+            }
     }
-
     private int newPassiveValue { get; set; } = 0;
 
     private void AddPassive()

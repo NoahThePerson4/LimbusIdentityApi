@@ -58,8 +58,11 @@ else
         }
         if (Id is not null)
         {
-            passive = await PassiveClient.GetPassiveAsync(id: Id.Value);
-            if(passive is null)
+            try
+            {
+                passive = await PassiveClient.GetPassiveAsync(id: Id.Value);
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 NavigationManager.NavigateTo("/notfound");
             }
