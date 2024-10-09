@@ -6,6 +6,7 @@
 @inject SkillClient SkillClient
 @rendermode InteractiveServer
 @attribute [StreamRendering]
+@inject NavigationManager NavigationManager
 
 <PageTitle>@Title</PageTitle>
 
@@ -198,9 +199,15 @@ else
 
         if (Id is not null)
         {
-            identity = await IDClient.GetIdentityAsync(Id.Value);
-
-            foreach(var skillId in identity.SkillIds)
+            try
+            {
+                identity = await IDClient.GetIdentityAsync(Id.Value);
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/notfound");
+            }
+        foreach(var skillId in identity.SkillIds)
             {
                 var skill = await SkillClient.GetSkillAsync(skillId);
                 if(skill is not null)
@@ -250,7 +257,8 @@ else
                 var sinner when sinner.Contains("Rodion", StringComparison.OrdinalIgnoreCase) => "/Sinner/Rodion",
                 var sinner when sinner.Contains("Sinclair", StringComparison.OrdinalIgnoreCase) => "/Sinner/Sinclair",
                 var sinner when sinner.Contains("Outis", StringComparison.OrdinalIgnoreCase) => "/Sinner/Outis",
-                var sinner when sinner.Contains("Gregor", StringComparison.OrdinalIgnoreCase) => "/Sinner/Gregor"
+                var sinner when sinner.Contains("Gregor", StringComparison.OrdinalIgnoreCase) => "/Sinner/Gregor",
+                _ => identity.Name
             };
 
             FactionTitle = identity.Name switch

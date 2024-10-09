@@ -120,8 +120,11 @@ else
         }
         if (Id is not null)
         {
-            ids = await IdentityClient.GetCreateIdentityAsync(id: Id.Value);
-            if(ids is null)
+            try
+            {
+                ids = await IdentityClient.GetCreateIdentityAsync(id: Id.Value);
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 NavigationManager.NavigateTo("/notfound");
             }

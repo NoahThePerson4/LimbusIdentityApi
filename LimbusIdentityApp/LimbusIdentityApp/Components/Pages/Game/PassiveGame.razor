@@ -1,0 +1,178 @@
+﻿@page "/game/passives"
+@using System.Diagnostics
+@using LimbusIdentityApp.Clients
+@using LimbusIdentityApp.Models
+@inject PassiveClient PassiveClient
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+<PageTitle>Passive Game</PageTitle>
+
+@if (passive2 is null)
+{
+    <p><em>Loading Passive2...</em></p>
+}
+else if (passive is null)
+{
+    <button class="btn btn-primary" @onclick="PickAPassive">Random Passive</button>
+
+    <p><em>Loading Passive...</em></p>
+}
+else
+{
+    <div class="row mb-4">
+        <div class="col-sm-3">
+            <input type="text" class="form-control" placeholder="What is The Passive Name?" @bind="searchString"
+                   @bind:event="oninput" @onkeyup="OnSearchChangedAsync" />
+        </div>
+    </div>
+
+    <table class="table table-striped table table-hover mt-3">
+        <thead class="table-dark">
+        <th>Passive Length</th>
+        <th>Your Length</th>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>@passive.Name.Length</td>
+                <td>@searchString.Length</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <table class="table table-striped table table-hover mt-3">
+        <thead class="table-dark">
+        <th>Cost</th>
+        <th>Description</th>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>@passive.Cost</td>
+                <td>@passive.Description</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    if(passiveW is null)
+    {
+        <button class="btn btn-primary" @onclick="PickAPassive">Skip</button>
+
+        <table class="table table-striped table table-hover mt-3">
+            <thead class="table-dark">
+            <th>Name</th>
+            </thead>
+
+            @foreach (var Passive in filteredPassives)
+            {
+                <tbody>
+                    <tr>
+                        <td>@Passive</td>
+                    </tr>
+
+                </tbody>
+            }
+        </table>
+    }
+    if (passiveW is not null)
+    {
+        <table class="table table-striped table table-hover mt-3">
+            <thead class="table-dark">
+            <th>Id</th>
+            <th>Name</th>
+            <th>Cost</th>
+            <th>Description</th>
+
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>@passive.Id</td>
+                    <td>@passive.Name</td>
+                    <td>@passive.Cost</td>
+                    <td>@passive.Description</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <button class="btn btn-primary" @onclick="PickAPassive">New Random Passive</button>
+    }
+}
+
+
+@code {
+    private PassiveSummary[]? passive2;
+    private Models.PassiveSummary? passive;
+    private Models.PassiveSummary? passiveW;
+    private string? searchString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        passive2 = await PassiveClient.GetPassivesAsync(PageNumber: 1, PageSize: 60);
+    }
+
+    private async Task PickAPassive()
+    {
+        randomP = await GetRandom();
+        passive = randomP;
+        passiveW = null;
+        searchString = "";
+    }
+
+    List<PassiveSummary> PassiveList = new List<PassiveSummary>();
+    List<String> PassiveListA = new List<String>();
+    private List<string> filteredPassives = new List<string>();
+
+    Random random = new Random();
+
+    public PassiveSummary? randomP;
+
+    List<String> PassiveListA2 = new List<String>();
+
+    private Task<PassiveSummary> GetRandom()
+    {
+        PassiveListA.Clear();
+        PassiveList.Clear();
+        PassiveListA2.Clear();
+
+        foreach(var passive in passive2)
+        {
+            PassiveList.Add(passive);
+            PassiveListA.Add(passive.Name);
+        }
+
+        var distinct = PassiveListA.Distinct();
+
+        foreach(var passive in distinct)
+        {
+            PassiveListA2.Add(passive);
+        }
+        PassiveListA2.Sort();
+
+        int randomX = random.Next(1, PassiveList.Count);
+
+        return Task.FromResult(PassiveList[randomX]);
+    }
+
+    private async Task OnSearchChangedAsync()
+    {
+        if(searchString == passive.Name)
+        {
+            passiveW = passive;
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            filteredPassives = PassiveListA2.Where(p => p.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        else
+        {
+            filteredPassives = PassiveListA2;
+        }
+    }
+}

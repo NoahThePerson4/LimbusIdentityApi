@@ -101,7 +101,14 @@ else
         }
         if (Id is not null)
         {
-            skill = await SkillClient.GetSkillAsync(id: Id.Value);
+            try
+            {
+                skill = await SkillClient.GetSkillAsync(id: Id.Value);
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/notfound");
+            }
             Title = $"Edit {skill.Name}";
         }
     }
