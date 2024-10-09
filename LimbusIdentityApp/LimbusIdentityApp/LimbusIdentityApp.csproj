@@ -9,7 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LimbusIdentityApp.Client\LimbusIdentityApp.Client.csproj" />
     <PackageReference Include="BlazorStrap" Version="5.2.101" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
   </ItemGroup>
 
 </Project>
