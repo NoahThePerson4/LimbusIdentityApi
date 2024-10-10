@@ -42,6 +42,11 @@ else
                     <ValidationMessage For="()=> skill.Sin" />
                 </div>
                 <div>
+                    <label for="OffenseLevel" class="form-label">Offense Level:</label>
+                    <InputNumber id="OffenseLevel" @bind-Value="skill.OffenseLevel" class="form-control"></InputNumber>
+                    <ValidationMessage For="()=> skill.OffenseLevel" />
+                </div>
+                <div>
                     <label for="Min" class="form-label">Min Roll:</label>
                     <InputNumber id="Min" @bind-Value="skill.MinRoll" class="form-control" />
                     <ValidationMessage For="()=> skill.MinRoll" />
@@ -101,6 +106,7 @@ else
             Name = string.Empty,
             Type = string.Empty,
             Sin = string.Empty,
+            OffenseLevel = 0,
             MinRoll = 0,
             MaxRoll = 0,
             SkillEffect = string.Empty,

@@ -5,6 +5,8 @@
         string Name,
         string Sinner,
         int Health,
+        string? Ineffective,
+        string? Fatal,
         int DefenseLevel,
         int MinSpeed,
         int MaxSpeed,

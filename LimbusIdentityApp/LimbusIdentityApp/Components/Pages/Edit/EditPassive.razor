@@ -31,6 +31,15 @@ else
                     <ValidationMessage For="()=> passive.Cost" />
                 </div>
                 <div>
+                    <label for="Cost" class="form-label">Cost:</label>
+                    <select id="Cost" @bind="passive.Support" class="form-control" >
+                        <option value="">Not Set</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                        </select>
+                    <ValidationMessage For="()=> passive.Support" />
+                </div>
+                <div>
                     <label for="Description" class="form-label">Description:</label>
                     <InputText id="Description" @bind-Value="passive.Description" class="form-control" />
                     <ValidationMessage For="()=> passive.Description" />

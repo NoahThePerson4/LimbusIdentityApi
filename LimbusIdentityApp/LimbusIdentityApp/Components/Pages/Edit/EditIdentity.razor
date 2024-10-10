@@ -36,6 +36,16 @@ else
                     <ValidationMessage For="()=> ids.Health"/>
                 </div>
                 <div>
+                    <label for="Ineffective" class="form-label">Ineffective:</label>
+                    <InputNumber id="Ineffective" @bind-Value="ids.Ineffective" class="form-control"/>
+                    <ValidationMessage For="()=> ids.Ineffective"/>
+                </div>
+                <div>
+                    <label for="Fatal" class="form-label">Fatal:</label>
+                    <InputNumber id="Fatal" @bind-Value="ids.Fatal" class="form-control" />
+                    <ValidationMessage For="()=> ids.Fatal" />
+                </div>
+                <div>
                     <label for="DefenseLevel" class="form-label">Defense Level:</label>
                     <InputNumber id="DefenseLevel" @bind-Value="ids.DefenseLevel" class="form-control"/>
                     <ValidationMessage For="()=> ids.DefenseLevel"/>

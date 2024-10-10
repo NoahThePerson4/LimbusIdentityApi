@@ -11,6 +11,7 @@ namespace LimbusIdentityApi.Extensions
                 passive.Id,
                 passive.Name,
                 passive.Cost,
+                passive.Support,
                 passive.Description);
         }
     }

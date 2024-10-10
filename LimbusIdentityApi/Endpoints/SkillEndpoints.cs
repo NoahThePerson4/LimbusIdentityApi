@@ -63,6 +63,7 @@ namespace LimbusIdentityApi.Endpoints
                     Name = skillDto.Name,
                     Type = skillDto.Type,
                     Sin = skillDto.Sin,
+                    OffenseLevel = skillDto.OffenseLevel,
                     MinRoll = skillDto.MinRoll,
                     MaxRoll = skillDto.MaxRoll,
                     SkillEffect = skillDto.SkillEffect,
@@ -91,6 +92,7 @@ namespace LimbusIdentityApi.Endpoints
                 skill.Name = updateSkillDto.Name;
                 skill.Type = updateSkillDto.Type;
                 skill.Sin = updateSkillDto.Sin;
+                skill.OffenseLevel = updateSkillDto.OffenseLevel;
                 skill.MinRoll = updateSkillDto.MinRoll;
                 skill.MaxRoll = updateSkillDto.MaxRoll;
                 skill.SkillEffect = updateSkillDto.SkillEffect;

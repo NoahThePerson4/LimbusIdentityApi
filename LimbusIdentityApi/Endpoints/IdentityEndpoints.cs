@@ -71,6 +71,8 @@ namespace LimbusIdentityApi.Endpoints
                     Name = identityDto.Name,
                     Sinner = identityDto.Sinner,
                     Health = identityDto.Health,
+                    Ineffective = identityDto.Ineffective,
+                    Fatal = identityDto.Fatal,
                     DefenseLevel = identityDto.DefenseLevel,
                     MinSpeed = identityDto.MinSpeed,
                     MaxSpeed = identityDto.MaxSpeed,
@@ -125,6 +127,8 @@ namespace LimbusIdentityApi.Endpoints
                 identity.Name = updateIdentityDto.Name;
                 identity.Sinner = updateIdentityDto.Sinner;
                 identity.Health = updateIdentityDto.Health;
+                identity.Ineffective = updateIdentityDto.Ineffective;
+                identity.Fatal = updateIdentityDto.Fatal;
                 identity.DefenseLevel = updateIdentityDto.DefenseLevel;
                 identity.MinSpeed = updateIdentityDto.MinSpeed;
                 identity.MaxSpeed = updateIdentityDto.MaxSpeed;

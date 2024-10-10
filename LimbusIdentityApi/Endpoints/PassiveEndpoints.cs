@@ -58,6 +58,7 @@ namespace LimbusIdentityApi.Endpoints
                 {
                     Name = passiveDto.Name,
                     Cost = passiveDto.Cost,
+                    Support = passiveDto.Support,
                     Description = passiveDto.Description
                 };
 
@@ -80,6 +81,7 @@ namespace LimbusIdentityApi.Endpoints
 
                 passive.Name = updatePassiveDto.Name;
                 passive.Cost = updatePassiveDto.Cost;
+                passive.Support = updatePassiveDto.Support;
                 passive.Description = updatePassiveDto.Description;
 
                 dbContext.Update(passive);

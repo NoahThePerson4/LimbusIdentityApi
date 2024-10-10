@@ -54,6 +54,8 @@ else
         <th>Name</th>
         <th>Sinner</th>
         <th>Health</th>
+        <th>Ineffective</th>
+        <th>Fatal</th>
         <th>DefenseLevel</th>
         <th>MinSpeed</th>
         <th>MaxSpeed</th>
@@ -67,6 +69,8 @@ else
                 <td style="@ColorMain">@identity.Name</td>
                 <td style="@ColorMain">@identity.Sinner</td>
                 <td>@identity.Health</td>
+                <td>@identity.Ineffective</td>
+                <td>@identity.Fatal</td>
                 <td>@identity.DefenseLevel</td>
                 <td>@identity.MinSpeed</td>
                 <td>@identity.MaxSpeed</td>
@@ -96,6 +100,7 @@ else
                <th>Passive Id</th>
                <th>Passive Name</th>
                <th>Passive Cost</th>
+               <th>Support</th>
                <th>Passive Description</th>
                 </tr>
            </thead>
@@ -104,6 +109,7 @@ else
                     <td style="@ColorMain">@identity.PassiveIds[i]</td>
                     <td>@identity.PassiveNames[i]</td>
                     <td style="@passiveColor">@identity.PassiveCosts[i]</td>
+                    <td>@identity.PassiveSupport[i]</td>
                     <td>@identity.PassiveDescription[i]</td>
                </tr>
            </tbody>
@@ -148,6 +154,10 @@ else
                         <tr>
                             <td>Skill Sin</td>
                             <td style="@skillColor">@skill.Sin</td>
+                        </tr>
+                        <tr>
+                            <td>Offense Level</td>
+                            <td>@skill.OffenseLevel</td>
                         </tr>
                         <tr>
                             <td>@skill.MinRoll</td>

@@ -13,6 +13,7 @@ namespace LimbusIdentityApi.Extensions
                 skill.Name,
                 skill.Type,
                 skill.Sin,
+                skill.OffenseLevel,
                 skill.MinRoll,
                 skill.MaxRoll,
                 skill.SkillEffect,
