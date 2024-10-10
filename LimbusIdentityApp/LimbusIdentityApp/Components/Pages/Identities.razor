@@ -82,7 +82,7 @@ else
                     </td>
                     <td>
                         <div>
-                            <a class="btn btn-primary me-2" role="button" href="/edit/identity/id.Id">
+                            <a class="btn btn-primary me-2" role="button" href="/edit/identity/@id.Id">
                                 <i class="bi bi-search">Edit</i>
                             </a>
                         </div>
@@ -115,7 +115,7 @@ else
     {
         int selectedPage = page + 1;
         page = selectedPage;
-        ids = await IdentityClient.GetIdentitiesAsync(PageNumber: selectedPage, PageSize: 10);
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: searchString, PageNumber: selectedPage, PageSize: 10);
     }
 
     private async Task SelectedPageDownAsync()
@@ -128,7 +128,7 @@ else
         }
 
         page = selectedPage;
-        ids = await IdentityClient.GetIdentitiesAsync(PageNumber: selectedPage, PageSize: 10);
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: searchString, PageNumber: selectedPage, PageSize: 10);
     }
 
     private async Task OnSearchChangedAsync()

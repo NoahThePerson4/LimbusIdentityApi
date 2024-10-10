@@ -107,7 +107,7 @@ else
     {
         int selectedPage = page + 1;
         page = selectedPage;
-        skills = await SkillClient.GetSkillsAsync(PageNumber: selectedPage, PageSize: 10);
+        skills = await SkillClient.GetSkillsAsync(Filter: searchString, PageNumber: selectedPage, PageSize: 10);
     }
 
     private async Task SelectedPageDownAsync()
@@ -120,7 +120,7 @@ else
         }
 
         page = selectedPage;
-        skills = await SkillClient.GetSkillsAsync(PageNumber: selectedPage, PageSize: 10);
+        skills = await SkillClient.GetSkillsAsync(Filter: searchString, PageNumber: selectedPage, PageSize: 10);
     }
 
     private async Task OnSearchChangedAsync()

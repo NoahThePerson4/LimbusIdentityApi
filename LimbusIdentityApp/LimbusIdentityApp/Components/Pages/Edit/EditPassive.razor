@@ -31,8 +31,8 @@ else
                     <ValidationMessage For="()=> passive.Cost" />
                 </div>
                 <div>
-                    <label for="Cost" class="form-label">Cost:</label>
-                    <select id="Cost" @bind="passive.Support" class="form-control" >
+                    <label for="Support" class="form-label">Support:</label>
+                    <select id="Support" @onchange="HandleSupportChange" class="form-control">
                         <option value="">Not Set</option>
                         <option value="true">Yes</option>
                         <option value="false">No</option>
@@ -76,6 +76,24 @@ else
               NavigationManager.NavigateTo("/notfound");
             }
             Title = $"Edit {passive.Name}";
+        }
+    }
+
+    private void HandleSupportChange(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+
+        if (string.IsNullOrEmpty(value))
+        {
+            passive.Support = null;
+        }
+        else if (value == "true")
+        {
+            passive.Support = true;
+        }
+        else if (value == "false")
+        {
+            passive.Support = false;
         }
     }
 

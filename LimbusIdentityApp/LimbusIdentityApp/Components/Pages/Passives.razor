@@ -91,7 +91,7 @@ else
     {
         int selectedPage = page + 1;
         page = selectedPage;
-        passives = await PassiveClient.GetPassivesAsync(PageNumber: selectedPage, PageSize: 10);
+        passives = await PassiveClient.GetPassivesAsync(Filter: searchString, PageNumber: selectedPage, PageSize: 10);
     }
 
     private async Task SelectedPageDownAsync()
@@ -104,7 +104,7 @@ else
         }
 
         page = selectedPage;
-        passives = await PassiveClient.GetPassivesAsync(PageNumber: selectedPage, PageSize: 10);
+        passives = await PassiveClient.GetPassivesAsync(Filter: searchString, PageNumber: selectedPage, PageSize: 10);
     }
 
     private async Task OnSearchChangedAsync()
