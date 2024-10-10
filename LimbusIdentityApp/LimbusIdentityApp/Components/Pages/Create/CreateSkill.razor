@@ -1,0 +1,136 @@
+﻿@page "/create/skill"
+@using LimbusIdentityApp.Clients
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject SkillClient SkillClient
+
+<PageTitle>Create Skill</PageTitle>
+
+<div class="mt-2">
+    <a class="btn btn-primary" role="button" href="/skills">Return</a>
+</div>
+
+@if(skill is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@skill"
+                      FormName="CreateSkill"
+                      OnValidSubmit="HandleSubmit">
+                <div>
+                    <label for="Image" class="form-label">Image:</label>
+                    <InputText id="Image" @bind-Value="skill.Image" class="form-control" />
+                    <ValidationMessage For="()=> skill.Image" />
+                </div>
+                <div>
+                    <label for="Name" class="form-label">Name:</label>
+                    <InputText id="Name" @bind-Value="skill.Name" class="form-control" />
+                    <ValidationMessage For="()=> skill.Name" />
+                </div>
+                <div>
+                    <label for="Type" class="form-label">Coin Type:</label>
+                    <InputText id="Type" @bind-Value="skill.Type" class="form-control" />
+                    <ValidationMessage For="()=> skill.Type" />
+                </div>
+                <div>
+                    <label for="Sin" class="form-label">Sin:</label>
+                    <InputText id="Sin" @bind-Value="skill.Sin" class="form-control" />
+                    <ValidationMessage For="()=> skill.Sin" />
+                </div>
+                <div>
+                    <label for="Min" class="form-label">Min Roll:</label>
+                    <InputNumber id="Min" @bind-Value="skill.MinRoll" class="form-control" />
+                    <ValidationMessage For="()=> skill.MinRoll" />
+                </div>
+                <div>
+                    <label for="Max" class="form-label">Max Roll:</label>
+                    <InputNumber id="Max" @bind-Value="skill.MaxRoll" class="form-control" />
+                    <ValidationMessage For="()=> skill.MaxRoll" />
+                </div>
+                <div>
+                    <label for="SkillEffect" class="form-label">Skill Effect:</label>
+                    <InputText id="SkillEffect" @bind-Value="skill.SkillEffect" class="form-control" />
+                    <ValidationMessage For="()=> skill.SkillEffect" />
+                </div>
+                <div class="mb-3">
+                    <label for="Passives" class="form-label">Coin Effects:</label>
+                    <div>
+                        @for (int i = 0; i < skill.CoinEffects.Count; i++)
+                        {
+                            <div class="input-group mb-2">
+                                <InputText @bind-Value="skill.CoinEffects[i]" class="form-control" />
+                                <button type="button" class="btn btn-danger" @onclick="() => RemoveCoinEffect(
+                                    i-1)">
+                                    Remove
+                                </button>
+                            </div>
+                            <ValidationMessage For="() => skill.CoinEffects[i]" />
+                        }
+                        <button type="button" class="btn btn-primary" @onclick="AddCoinEffect">Add Ability</button>
+                    </div>
+                </div>
+                <div class="input-group mt-2">
+                    <label for="newAbility" class="form-label">New Ability Value:</label>
+                    <InputText id="newAbility" @bind-Value="newCoinEffectValue" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a class="btn btn-danger" role="button" href="/skills">Cancel</a>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [SupplyParameterFromForm]
+    private Models.SkillDetails? skill { get; set; }
+
+    protected override Task OnParametersSetAsync()
+    {
+        if(skill is not null)
+        {
+            return Task.CompletedTask;
+        }
+
+        skill = new()
+        {
+            Image = string.Empty,
+            Name = string.Empty,
+            Type = string.Empty,
+            Sin = string.Empty,
+            MinRoll = 0,
+            MaxRoll = 0,
+            SkillEffect = string.Empty,
+            CoinEffects = new List<string>()
+        };
+        return Task.CompletedTask;
+    }
+
+    private string newCoinEffectValue { get; set; } = "CoinEffect";
+
+    private void AddCoinEffect()
+    {
+        skill.CoinEffects.Add(newCoinEffectValue);
+        newCoinEffectValue = "CoinEffect";
+    }
+
+    private void RemoveCoinEffect(int index)
+    {
+        if (skill?.CoinEffects != null && index >= 0)
+        {
+            skill.CoinEffects.RemoveAt(index);
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        ArgumentNullException.ThrowIfNull(skill);
+
+        await SkillClient.AddSkillAsync(skill);
+
+        NavigationManager.NavigateTo("/skill");
+    }
+}

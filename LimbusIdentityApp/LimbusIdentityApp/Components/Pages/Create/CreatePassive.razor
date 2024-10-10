@@ -1,0 +1,75 @@
+﻿@page "/create/passive"
+@using LimbusIdentityApp.Clients
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject PassiveClient PassiveClient
+
+<PageTitle>Create Passive</PageTitle>
+
+<div class="mt-2">
+    <a class="btn btn-primary" role="button" href="/passives">Return</a>
+</div>
+
+@if (passive is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@passive"
+                      FormName="CreatePassive"
+                      OnValidSubmit="HandleSubmit">
+                <div>
+                    <label for="Name" class="form-label">Name:</label>
+                    <InputText id="Name" @bind-Value="passive.Name" class="form-control" />
+                    <ValidationMessage For="()=> passive.Name" />
+                </div>
+                <div>
+                    <label for="Cost" class="form-label">Cost:</label>
+                    <InputText id="Cost" @bind-Value="passive.Cost" class="form-control" />
+                    <ValidationMessage For="()=> passive.Cost" />
+                </div>
+                <div>
+                    <label for="Description" class="form-label">Description:</label>
+                    <InputText id="Description" @bind-Value="passive.Description" class="form-control" />
+                    <ValidationMessage For="()=> passive.Description" />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a class="btn btn-danger" role="button" href="/passives">Cancel</a>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [SupplyParameterFromForm]
+    private Models.PassiveDetails? passive { get; set; }
+
+    protected override Task OnParametersSetAsync()
+    {
+        if (passive is not null)
+        {
+            return Task.CompletedTask;
+        }
+
+        passive = new()
+            {
+                Name = string.Empty,
+                Cost = string.Empty,
+                Description = string.Empty
+            };
+        return Task.CompletedTask;
+
+    }
+
+    private async Task HandleSubmit()
+    {
+        ArgumentNullException.ThrowIfNull(passive);
+
+        await PassiveClient.AddPassiveAsync(passive);
+
+        NavigationManager.NavigateTo("/passives");
+    }
+}

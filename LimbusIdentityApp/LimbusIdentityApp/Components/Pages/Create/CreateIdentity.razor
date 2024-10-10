@@ -1,0 +1,173 @@
+﻿@page "/create/identity"
+@using LimbusIdentityApp.Clients
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject IdentityClient IdentityClient
+
+<PageTitle>Create Identity</PageTitle>
+
+<div class="mt-2">
+    <a class="btn btn-primary" role="button" href="/identities">Return</a>
+</div>
+
+@if (ids is null)
+{
+    <p><em>Loading</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@ids"
+                      FormName="CreateSkill"
+                      OnValidSubmit="HandleSubmit">
+                <div>
+                    <label for="Name" class="form-label">Name:</label>
+                    <InputText id="Name" @bind-Value="ids.Name" class="form-control" />
+                    <ValidationMessage For="()=> ids.Name" />
+                </div>
+                <div>
+                    <label for="Sinner" class="form-label">Sinner:</label>
+                    <InputText id="Sinner" @bind-Value="ids.Sinner" class="form-control" />
+                    <ValidationMessage For="()=> ids.Sinner" />
+                </div>
+                <div>
+                    <label for="Health" class="form-label">Health:</label>
+                    <InputNumber id="Health" @bind-Value="ids.Health" class="form-control" />
+                    <ValidationMessage For="()=> ids.Health" />
+                </div>
+                <div>
+                    <label for="DefenseLevel" class="form-label">Defense Level:</label>
+                    <InputNumber id="DefenseLevel" @bind-Value="ids.DefenseLevel" class="form-control" />
+                    <ValidationMessage For="()=> ids.DefenseLevel" />
+                </div>
+                <div>
+                    <label for="Min" class="form-label">Min Speed:</label>
+                    <InputNumber id="Min" @bind-Value="ids.MinSpeed" class="form-control" />
+                    <ValidationMessage For="()=> ids.MinSpeed" />
+                </div>
+                <div>
+                    <label for="Max" class="form-label">Max Speed:</label>
+                    <InputNumber id="Max" @bind-Value="ids.MaxSpeed" class="form-control" />
+                    <ValidationMessage For="()=> ids.MaxSpeed" />
+                </div>
+                <div>
+                    <label for="Image" class="form-label">Image:</label>
+                    <InputText id="Image" @bind-Value="ids.Image" class="form-control" />
+                    <ValidationMessage For="()=> ids.Image" />
+                </div>
+                <div class="mb-3">
+                    <label for="Passives" class="form-label">Passive Ids:</label>
+                    <div>
+                        @for (int i = 0; i < ids.PassiveIds.Count; i++)
+                        {
+                            <div class="input-group mb-2">
+                                <InputNumber @bind-Value="ids.PassiveIds[i]" class="form-control" />
+                                <button type="button" class="btn btn-danger" @onclick="() => RemovePassive(
+                                    i-1)">
+                                    Remove
+                                </button>
+                            </div>
+                            <ValidationMessage For="() => ids.PassiveIds[i]" />
+                        }
+                        <button type="button" class="btn btn-primary" @onclick="AddPassive">Add Passive</button>
+                    </div>
+                </div>
+                <div class="input-group mt-2">
+                    <label for="newPassive" class="form-label">New Passive Value:</label>
+                    <InputNumber id="newAbility" @bind-Value="newPassiveValue" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label for="Skills" class="form-label">Skill Ids:</label>
+                    <div>
+                        @for (int i = 0; i < ids.SkillIds.Count; i++)
+                        {
+                            <div class="input-group mb-2">
+                                <InputNumber @bind-Value="ids.SkillIds[i]" class="form-control" />
+                                <button type="button" class="btn btn-danger" @onclick="() => RemoveSkill(
+                                    i-1)">
+                                    Remove
+                                </button>
+                            </div>
+                            <ValidationMessage For="() => ids.SkillIds[i]" />
+                        }
+                        <button type="button" class="btn btn-primary" @onclick="AddSkill">Add Skill</button>
+                    </div>
+                </div>
+                <div class="input-group mt-2">
+                    <label for="newSkill" class="form-label">New Skill Value:</label>
+                    <InputNumber id="newSkill" @bind-Value="newSkillValue" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a class="btn btn-danger" role="button" href="/identities">Cancel</a>
+            </EditForm>
+        </div>
+     </div>
+}
+
+@code {
+    [SupplyParameterFromForm]
+    private Models.IdentityCreate? ids { get; set; }
+
+    protected override Task OnParametersSetAsync()
+    {
+        if(ids is not null)
+        {
+            return Task.CompletedTask;
+        }
+        ids = new()
+        {
+            Name = string.Empty,
+            Sinner = string.Empty,
+            Health = 0,
+            DefenseLevel = 0,
+            MinSpeed = 0,
+            MaxSpeed = 0,
+            Image = string.Empty,
+            PassiveIds = new List<int>(),
+            SkillIds = new List<int>()
+        };
+        return Task.CompletedTask;
+    }
+
+    private int newPassiveValue { get; set; } = 0;
+
+    private void AddPassive()
+    {
+        ids.PassiveIds.Add(newPassiveValue);
+        newPassiveValue = 0;
+    }
+
+    private void RemovePassive(int index)
+    {
+        if (ids?.PassiveIds != null && index >= 0)
+        {
+            ids.PassiveIds.RemoveAt(index);
+        }
+    }
+
+    private int newSkillValue { get; set; } = 0;
+
+    private void AddSkill()
+    {
+        ids.SkillIds.Add(newSkillValue);
+        newSkillValue = 0;
+    }
+
+    private void RemoveSkill(int index)
+    {
+        if (ids?.SkillIds != null && index >= 0)
+        {
+            ids.SkillIds.RemoveAt(index);
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+            ArgumentNullException.ThrowIfNull(ids);
+
+            await IdentityClient.AddIdentityAsync(ids);
+
+        NavigationManager.NavigateTo("/identities");
+    }
+}
