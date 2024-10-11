@@ -2,7 +2,7 @@
 
 namespace LimbusIdentityApp.Clients
 {
-    public class IdentityClient (HttpClient httpClient)
+    public class IdentityClient(HttpClient httpClient)
     {
         public async Task<IdentitySummary[]> GetIdentitiesAsync(int PageNumber, int PageSize, string? Filter = null)
         {

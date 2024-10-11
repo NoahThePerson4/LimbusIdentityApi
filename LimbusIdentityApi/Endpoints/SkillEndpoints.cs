@@ -17,7 +17,7 @@ namespace LimbusIdentityApi.Endpoints
             var group = routes.MapGroup("/Skills")
                 .WithTags("Skills");
 
-            group.MapGet("", async(IdentityDbContext dbContext, [AsParameters] GetSkillDto skillDto, ILoggerFactory loggerFactory) =>
+            group.MapGet("", async (IdentityDbContext dbContext, [AsParameters] GetSkillDto skillDto, ILoggerFactory loggerFactory) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
                 var skill = new List<Skill>();
@@ -42,12 +42,12 @@ namespace LimbusIdentityApi.Endpoints
                 return Results.Ok(skillDtos);
             });
 
-            group.MapGet("{id}", async (int id ,IdentityDbContext dbContext, ILoggerFactory loggerFactory) =>
+            group.MapGet("{id}", async (int id, IdentityDbContext dbContext, ILoggerFactory loggerFactory) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
                 var skill = await dbContext.Skills.FindAsync(id);
 
-                if(skill is null)
+                if (skill is null)
                 {
                     logger.LogError("Get was called on Skills for the Skill with Id {id} but no Skill with that Id exists!", id);
                     return Results.NotFound("No Skill with that Id exists!");
@@ -82,7 +82,7 @@ namespace LimbusIdentityApi.Endpoints
                 await dbContext.AddAsync(skill);
                 await dbContext.SaveChangesAsync();
 
-                logger.LogInformation("The new Skill {name} was created with the Id {id}.",skill.Name, skill.Id);
+                logger.LogInformation("The new Skill {name} was created with the Id {id}.", skill.Name, skill.Id);
                 return Results.CreatedAtRoute(GetSkill, new { id = skill.Id }, skill.AsSkillDto());
             });
 
@@ -91,7 +91,7 @@ namespace LimbusIdentityApi.Endpoints
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
                 var skill = await dbContext.Skills.FindAsync(id);
 
-                if(skill is null)
+                if (skill is null)
                 {
                     logger.LogError("Put was called for the Skill with Id {id} but no Skill with that Id exists!", id);
                     return Results.NotFound("No Skill with that Id exists!");
@@ -125,7 +125,7 @@ namespace LimbusIdentityApi.Endpoints
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
                 var skill = await dbContext.Skills.FindAsync(id);
 
-                if(skill is not null)
+                if (skill is not null)
                 {
                     await dbContext.Skills.Where(skill => skill.Id == id)
                     .ExecuteDeleteAsync();

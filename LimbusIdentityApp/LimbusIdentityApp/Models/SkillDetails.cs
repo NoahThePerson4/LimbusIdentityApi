@@ -17,14 +17,14 @@ namespace LimbusIdentityApp.Models
         [Required(ErrorMessage = "Please provide a Sin Type.")]
         [ValidSin]
         public string Sin { get; set; }
-        [Range(1,200, ErrorMessage="Offense Level Must be between 1 and 200.")]
+        [Range(1, 200, ErrorMessage = "Offense Level Must be between 1 and 200.")]
         [Required(ErrorMessage = "Please provide an Offense Level (Base is 50).")]
         public int OffenseLevel { get; set; }
         [MinMaxCoinRoll]
         [Required(ErrorMessage = "Please provide a Min Roll.")]
-        [Range(1, 100, ErrorMessage="Min Roll Must be between 1 and 100.")]
+        [Range(1, 100, ErrorMessage = "Min Roll Must be between 1 and 100.")]
         public int MinRoll { get; set; }
-        [Range(1,100, ErrorMessage ="Max Roll Must be between 1 and 100.")]
+        [Range(1, 100, ErrorMessage = "Max Roll Must be between 1 and 100.")]
         [MinMaxCoinRoll]
         [Required(ErrorMessage = "Please provide a Max Roll.")]
         public int MaxRoll { get; set; }

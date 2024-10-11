@@ -39,7 +39,7 @@ namespace LimbusIdentityApi.Validations
                 .WithMessage("Please give the skill an Offense Level (50 is the base).")
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Offense Level can't be negative.");
-                
+
             RuleFor(skill => skill.MinRoll)
                 .NotNull()
                 .NotEmpty()

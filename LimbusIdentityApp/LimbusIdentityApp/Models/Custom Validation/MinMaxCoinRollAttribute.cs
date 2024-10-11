@@ -12,7 +12,7 @@ namespace LimbusIdentityApp.Models.Custom_Validation
             {
                 return new ValidationResult("You can't have a higher Min Roll than Max Roll.");
             }
-            
+
             return ValidationResult.Success;
         }
     }

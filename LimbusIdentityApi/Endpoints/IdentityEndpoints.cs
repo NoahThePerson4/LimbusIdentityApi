@@ -20,7 +20,7 @@ namespace LimbusIdentityApi.Endpoints
 
                 var identities = new List<Identity>();
 
-                if(identityDto.filter is not null)
+                if (identityDto.filter is not null)
                 {
                     identities = await dbContext.Identities.Where(identity => identity.Name.Contains(identityDto.filter) || identity.Sinner.Contains(identityDto.filter))
                     .OrderBy(i => i.Id)
@@ -59,7 +59,7 @@ namespace LimbusIdentityApi.Endpoints
                     logger.LogError("Get on Identities was called for the Id {id} but no Identity with that Id exists!", id);
                     return Results.NotFound("No Identity with that Id exists!");
                 }
-                logger.LogInformation("Get on Identities was called for the Identity {name} {sinner} with Id {id}.", identity.Name,identity.Sinner, id);
+                logger.LogInformation("Get on Identities was called for the Identity {name} {sinner} with Id {id}.", identity.Name, identity.Sinner, id);
                 return Results.Ok(identity.AsIdentityDetailedDto());
             })
                 .WithName(GetIdentity);
@@ -80,7 +80,7 @@ namespace LimbusIdentityApi.Endpoints
                     Image = identityDto.Image
                 };
 
-                if(identityDto.PassiveIds is not null)
+                if (identityDto.PassiveIds is not null)
                 {
                     var passives = await dbContext.Passives
                     .Where(p => identityDto.PassiveIds.Contains(p.Id))
@@ -89,7 +89,7 @@ namespace LimbusIdentityApi.Endpoints
                     identity.Passives = passives;
                 }
 
-                if(identityDto.SkillIds is not null)
+                if (identityDto.SkillIds is not null)
                 {
                     var skills = await dbContext.Skills
                     .Where(s => identityDto.SkillIds.Contains(s.Id))
@@ -97,16 +97,16 @@ namespace LimbusIdentityApi.Endpoints
 
                     identity.Skills = skills;
                 }
-                
-                if(identityDto.SkillIds is null )
+
+                if (identityDto.SkillIds is null)
                 {
                     logger.LogError("No Skills were given to the Identity {name} {sinner}.", identity.Name, identity.Sinner);
-                } 
-                if(identityDto.PassiveIds is null)
+                }
+                if (identityDto.PassiveIds is null)
                 {
                     logger.LogError("No Passives were given to the Identity {name} {sinner}.", identity.Name, identity.Sinner);
                 }
-                
+
                 var validationResult = await createIdentityValidator.ValidateAsync(identityDto);
                 if (!validationResult.IsValid)
                 {
@@ -125,7 +125,7 @@ namespace LimbusIdentityApi.Endpoints
                 var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
                 var identity = await dbContext.Identities.FindAsync(id);
 
-                if(identity is null)
+                if (identity is null)
                 {
                     logger.LogError("Put was called on Identities with the Id {id} but no Identity with that Id exists!", id);
                     return Results.NotFound("No Identity with that Id exists!");
@@ -141,7 +141,7 @@ namespace LimbusIdentityApi.Endpoints
                 identity.MaxSpeed = updateIdentityDto.MaxSpeed;
                 identity.Image = updateIdentityDto.Image;
 
-                if(updateIdentityDto.PassiveIds is not null)
+                if (updateIdentityDto.PassiveIds is not null)
                 {
                     var passives = await dbContext.Passives
                     .Where(p => updateIdentityDto.PassiveIds.Contains(p.Id))
@@ -150,7 +150,7 @@ namespace LimbusIdentityApi.Endpoints
                     identity.Passives = passives;
                 }
 
-                if(updateIdentityDto.SkillIds is not null)
+                if (updateIdentityDto.SkillIds is not null)
                 {
                     var skills = await dbContext.Skills
                     .Where(s => updateIdentityDto.SkillIds.Contains(s.Id))
@@ -177,7 +177,7 @@ namespace LimbusIdentityApi.Endpoints
             {
                 var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
                 var identity = await dbContext.Identities.FindAsync(id);
-                if(identity is not null)
+                if (identity is not null)
                 {
                     await dbContext.Identities.Where(identity => identity.Id == id)
                     .ExecuteDeleteAsync();

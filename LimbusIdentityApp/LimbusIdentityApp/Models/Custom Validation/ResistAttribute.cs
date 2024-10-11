@@ -11,7 +11,7 @@ namespace LimbusIdentityApp.Models.Custom_Validation
             if (idDetails.Ineffective == "Slash" || idDetails.Ineffective == "Pierce" || idDetails.Ineffective == "Blunt")
             {
                 return ValidationResult.Success;
-                
+
             }
             return new ValidationResult("You must have a resistance of Slash, Pierce, or Blunt.");
         }

@@ -9,12 +9,12 @@ namespace LimbusIdentityApi.Extensions
         {
             List<string> passives = ["None"];
             List<string> skills = ["None"];
-            if(identity.Passives is not null)
+            if (identity.Passives is not null)
             {
                 passives = identity.Passives.Select(p => p.Name).ToList();
             }
 
-            if(identity.Skills is not null)
+            if (identity.Skills is not null)
             {
                 skills = identity.Skills.Select(s => s.Name).ToList();
             }
@@ -55,8 +55,8 @@ namespace LimbusIdentityApi.Extensions
                 identity.Passives.Select(p => p.Description).ToList(),
                 identity.Skills.Select(s => s.Id).ToList(),
                 identity.Skills.Select(s => s.Name).ToList(),
-                identity.Skills.Select(s=>s.Type).ToList(),
-                identity.Skills.Select(s=> s.Sin).ToList(),
+                identity.Skills.Select(s => s.Type).ToList(),
+                identity.Skills.Select(s => s.Sin).ToList(),
                 identity.Skills.Select(s => s.OffenseLevel).ToList(),
                 identity.Skills.Select(s => s.MinRoll).ToList(),
                 identity.Skills.Select(s => s.MaxRoll).ToList(),

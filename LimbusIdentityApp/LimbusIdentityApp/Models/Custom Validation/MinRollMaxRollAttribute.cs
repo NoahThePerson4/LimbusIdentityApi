@@ -8,7 +8,7 @@ namespace LimbusIdentityApp.Models.Custom_Validation
         {
             var skillDetails = (SkillDetails)validationContext.ObjectInstance;
 
-            if(skillDetails.MinRoll >= skillDetails.MaxRoll)
+            if (skillDetails.MinRoll >= skillDetails.MaxRoll)
             {
                 return new ValidationResult("Min Roll must be less than Max Roll.");
             }

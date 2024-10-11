@@ -14,7 +14,8 @@ namespace LimbusIdentityApi.Endpoints
             var group = routes.MapGroup("/Passives")
                 .WithTags("Passives");
 
-            group.MapGet("", async (IdentityDbContext dbContext, [AsParameters] GetPassiveDto passiveDto, ILoggerFactory loggerFactory) =>{
+            group.MapGet("", async (IdentityDbContext dbContext, [AsParameters] GetPassiveDto passiveDto, ILoggerFactory loggerFactory) =>
+            {
                 var logger = loggerFactory.CreateLogger(nameof(PassiveEndpoints));
                 var passives = new List<Passive>();
                 if (passiveDto.filter is not null)
@@ -36,7 +37,7 @@ namespace LimbusIdentityApi.Endpoints
                     .Take(passiveDto.pageSize)
                     .ToListAsync();
                 }
-                var DtoPassives= passives.Select(passive => passive.AsPassiveDto());
+                var DtoPassives = passives.Select(passive => passive.AsPassiveDto());
 
                 logger.LogInformation("Get On Passives was called for {pages} passives on page {page} with the filter {filter}.", passiveDto.pageSize, passiveDto.pageNumber, passiveDto.filter);
                 return Results.Ok(DtoPassives);
@@ -46,7 +47,7 @@ namespace LimbusIdentityApi.Endpoints
             {
                 var logger = loggerFactory.CreateLogger(nameof(PassiveEndpoints));
                 var passive = await dbContext.Passives.FindAsync(id);
-                if( passive is null)
+                if (passive is null)
                 {
                     logger.LogError("Get was called on Passives with the Id {id} but no Passive with that Id exists!", id);
                     return Results.NotFound("No Passive exists with that Id!");
@@ -76,14 +77,14 @@ namespace LimbusIdentityApi.Endpoints
                 await dbContext.SaveChangesAsync();
 
                 logger.LogInformation("New Passive {name} was created with Id {id}.", passive.Name, passive.Id);
-                return Results.CreatedAtRoute(GetPassive, new {id = passive.Id}, passive.AsPassiveDto());
+                return Results.CreatedAtRoute(GetPassive, new { id = passive.Id }, passive.AsPassiveDto());
             });
 
-            group.MapPut("{id}", async (int id,IdentityDbContext dbContext, CreatePassiveDto updatePassiveDto, ILoggerFactory loggerFactory, IValidator<CreatePassiveDto> updatePassiveValidator) =>
+            group.MapPut("{id}", async (int id, IdentityDbContext dbContext, CreatePassiveDto updatePassiveDto, ILoggerFactory loggerFactory, IValidator<CreatePassiveDto> updatePassiveValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(PassiveEndpoints));
                 var passive = await dbContext.Passives.FindAsync(id);
-                if(passive is null)
+                if (passive is null)
                 {
                     logger.LogError("Put was called for the Passive with the Id of {id} but no Passive with that Id exists!", id);
                     return Results.NotFound("No Passive with that Id exists!");
@@ -111,7 +112,7 @@ namespace LimbusIdentityApi.Endpoints
                 var logger = loggerFactory.CreateLogger(nameof(PassiveEndpoints));
                 var passive = await dbContext.Passives.FindAsync(id);
 
-                if(passive is not null)
+                if (passive is not null)
                 {
                     await dbContext.Passives.Where(passive => passive.Id == id)
                     .ExecuteDeleteAsync();

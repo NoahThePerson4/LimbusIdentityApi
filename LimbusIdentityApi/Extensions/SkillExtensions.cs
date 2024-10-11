@@ -18,7 +18,7 @@ namespace LimbusIdentityApi.Extensions
                 skill.MaxRoll,
                 skill.SkillEffect,
                 skill.CoinEffects?.ToList()
-                );                
+                );
         }
     }
 }
