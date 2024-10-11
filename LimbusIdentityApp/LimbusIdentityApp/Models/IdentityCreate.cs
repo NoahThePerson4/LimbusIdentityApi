@@ -10,6 +10,7 @@ namespace LimbusIdentityApp.Models
         [Required (ErrorMessage ="Please provide a Name.")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Please provide a Sinner.")]
+        [Sinner]
         public string Sinner { get; set; }
         [Required(ErrorMessage = "Please provide a Health Value.")]
         [Range(0, 1000, ErrorMessage = "Health should be between 0 and 1000.")]
@@ -33,7 +34,6 @@ namespace LimbusIdentityApp.Models
         [MinMaxSpeed]
         [Range(0, 100, ErrorMessage = "Max Speed should be between 0 and 100.")]
         public int MaxSpeed { get; set; }
-        [Url]
         public string? Image { get; set; }
         public List<int> PassiveIds { get; set; }
         public List<int> SkillIds { get; set; }
