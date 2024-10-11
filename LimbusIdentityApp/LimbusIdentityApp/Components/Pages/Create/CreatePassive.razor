@@ -21,6 +21,7 @@ else
             <EditForm Model="@passive"
                       FormName="CreatePassive"
                       OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
                 <div>
                     <label for="Name" class="form-label">Name:</label>
                     <InputText id="Name" @bind-Value="passive.Name" class="form-control" />
@@ -32,13 +33,9 @@ else
                     <ValidationMessage For="()=> passive.Cost" />
                 </div>
                 <div>
-                    <label for="Cost" class="form-label">Cost:</label>
-                    <select id="Cost" @bind="passive.Support" class="form-control">
-                        <option value="">Not Set</option>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                    <ValidationMessage For="()=> passive.Support" />
+                     <label for="Support" class="form-label">Support:</label>
+                    <InputCheckbox id="Support" @bind-Value="passive.Support" class="form-check-input" />
+                     <ValidationMessage For="()=> passive.Support" />
                 </div>
                 <div>
                     <label for="Description" class="form-label">Description:</label>

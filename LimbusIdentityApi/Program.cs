@@ -1,5 +1,7 @@
+using FluentValidation;
 using LimbusIdentityApi.Data;
 using LimbusIdentityApi.Endpoints;
+using LimbusIdentityApi.Validations;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -21,6 +23,10 @@ builder.Services.AddDbContext<IdentityDbContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateSkillDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreatePassiveDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateIdentityDtoValidator>();
 
 var app = builder.Build();
 

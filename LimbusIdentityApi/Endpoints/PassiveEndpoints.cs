@@ -1,4 +1,5 @@
-﻿using LimbusIdentityApi.Data;
+﻿using FluentValidation;
+using LimbusIdentityApi.Data;
 using LimbusIdentityApi.Dtos;
 using LimbusIdentityApi.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,10 @@ namespace LimbusIdentityApi.Endpoints
                 var passives = new List<Passive>();
                 if (passiveDto.filter is not null)
                 {
-                     passives = await dbContext.Passives.Where(passive => passive.Name.Contains(passiveDto.filter) || passive.Description.Contains(passiveDto.filter) || passive.Cost.Contains(passiveDto.filter))
+                    bool supportFilter;
+                    bool filterIsBool = bool.TryParse(passiveDto.filter, out supportFilter);
+
+                    passives = await dbContext.Passives.Where(passive => passive.Name.Contains(passiveDto.filter) || passive.Description.Contains(passiveDto.filter) || passive.Cost.Contains(passiveDto.filter) || (filterIsBool && passive.Support == supportFilter))
                     .OrderBy(passive => passive.Id)
                     .Skip((passiveDto.pageNumber - 1) * passiveDto.pageSize)
                     .Take(passiveDto.pageSize)
@@ -51,7 +55,7 @@ namespace LimbusIdentityApi.Endpoints
                 return Results.Ok(passive.AsPassiveDto());
             }).WithName(GetPassive);
 
-            group.MapPost("", async (IdentityDbContext dbContext, CreatePassiveDto passiveDto, ILoggerFactory loggerFactory) =>
+            group.MapPost("", async (IdentityDbContext dbContext, CreatePassiveDto passiveDto, ILoggerFactory loggerFactory, IValidator<CreatePassiveDto> createPassiveValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(PassiveEndpoints));
                 Passive passive = new()
@@ -62,6 +66,12 @@ namespace LimbusIdentityApi.Endpoints
                     Description = passiveDto.Description
                 };
 
+                var validationResult = await createPassiveValidator.ValidateAsync(passiveDto);
+                if (!validationResult.IsValid)
+                {
+                    return Results.BadRequest(validationResult.Errors);
+                }
+
                 await dbContext.AddAsync(passive);
                 await dbContext.SaveChangesAsync();
 
@@ -69,7 +79,7 @@ namespace LimbusIdentityApi.Endpoints
                 return Results.CreatedAtRoute(GetPassive, new {id = passive.Id}, passive.AsPassiveDto());
             });
 
-            group.MapPut("{id}", async (int id,IdentityDbContext dbContext, CreatePassiveDto updatePassiveDto, ILoggerFactory loggerFactory) =>
+            group.MapPut("{id}", async (int id,IdentityDbContext dbContext, CreatePassiveDto updatePassiveDto, ILoggerFactory loggerFactory, IValidator<CreatePassiveDto> updatePassiveValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(PassiveEndpoints));
                 var passive = await dbContext.Passives.FindAsync(id);
@@ -77,6 +87,12 @@ namespace LimbusIdentityApi.Endpoints
                 {
                     logger.LogError("Put was called for the Passive with the Id of {id} but no Passive with that Id exists!", id);
                     return Results.NotFound("No Passive with that Id exists!");
+                }
+
+                var validationResult = await updatePassiveValidator.ValidateAsync(updatePassiveDto);
+                if (!validationResult.IsValid)
+                {
+                    return Results.BadRequest(validationResult.Errors);
                 }
 
                 passive.Name = updatePassiveDto.Name;

@@ -1,4 +1,5 @@
-﻿using LimbusIdentityApi.Data;
+﻿using FluentValidation;
+using LimbusIdentityApi.Data;
 using LimbusIdentityApi.Dtos;
 using LimbusIdentityApi.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -63,7 +64,7 @@ namespace LimbusIdentityApi.Endpoints
             })
                 .WithName(GetIdentity);
 
-            group.MapPost("", async (IdentityDbContext dbContext, CreateIdentityDto identityDto, ILoggerFactory loggerFactory) =>
+            group.MapPost("", async (IdentityDbContext dbContext, CreateIdentityDto identityDto, ILoggerFactory loggerFactory, IValidator<CreateIdentityDto> createIdentityValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
                 Identity identity = new()
@@ -105,6 +106,12 @@ namespace LimbusIdentityApi.Endpoints
                 {
                     logger.LogError("No Passives were given to the Identity {name} {sinner}.", identity.Name, identity.Sinner);
                 }
+                
+                var validationResult = await createIdentityValidator.ValidateAsync(identityDto);
+                if (!validationResult.IsValid)
+                {
+                    return Results.BadRequest(validationResult.Errors);
+                }
 
                 await dbContext.AddAsync(identity);
                 await dbContext.SaveChangesAsync();
@@ -113,7 +120,7 @@ namespace LimbusIdentityApi.Endpoints
                 return Results.CreatedAtRoute(GetIdentity, new { id = identity.Id }, identity.AsIdentityDto());
             });
 
-            group.MapPut("{id}", async (int id, IdentityDbContext dbContext, CreateIdentityDto updateIdentityDto, ILoggerFactory loggerFactory) =>
+            group.MapPut("{id}", async (int id, IdentityDbContext dbContext, CreateIdentityDto updateIdentityDto, ILoggerFactory loggerFactory, IValidator<CreateIdentityDto> updatedIdentityValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
                 var identity = await dbContext.Identities.FindAsync(id);
@@ -150,6 +157,12 @@ namespace LimbusIdentityApi.Endpoints
                     .ToListAsync();
 
                     identity.Skills = skills;
+                }
+
+                var validationResult = await updatedIdentityValidator.ValidateAsync(updateIdentityDto);
+                if (!validationResult.IsValid)
+                {
+                    return Results.BadRequest(validationResult.Errors);
                 }
 
                 dbContext.Update(identity);

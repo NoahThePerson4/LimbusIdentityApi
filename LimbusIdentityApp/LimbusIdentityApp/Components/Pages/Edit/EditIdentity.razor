@@ -20,6 +20,7 @@ else
             <EditForm Model="@ids"
                       FormName="EditId"
                       OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
                 <div>
                     <label for="Name" class="form-label">Name:</label>
                     <InputText id="Name" @bind-Value="ids.Name" class="form-control" />

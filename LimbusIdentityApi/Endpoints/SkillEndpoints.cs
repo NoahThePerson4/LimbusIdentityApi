@@ -1,6 +1,9 @@
-﻿using LimbusIdentityApi.Data;
+﻿using FluentValidation;
+using LimbusIdentityApi.Data;
 using LimbusIdentityApi.Dtos;
 using LimbusIdentityApi.Extensions;
+using LimbusIdentityApi.Validations;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
@@ -54,7 +57,7 @@ namespace LimbusIdentityApi.Endpoints
             })
                 .WithName(GetSkill);
 
-            group.MapPost("", async (IdentityDbContext dbContext, CreateSkillDto skillDto, ILoggerFactory loggerFactory) =>
+            group.MapPost("", async (IdentityDbContext dbContext, CreateSkillDto skillDto, ILoggerFactory loggerFactory, IValidator<CreateSkillDto> createSkillValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
                 Skill skill = new()
@@ -70,6 +73,12 @@ namespace LimbusIdentityApi.Endpoints
                     CoinEffects = skillDto.CoinEffects
                 };
 
+                var validationResult = await createSkillValidator.ValidateAsync(skillDto);
+                if (!validationResult.IsValid)
+                {
+                    return Results.BadRequest(validationResult.Errors);
+                }
+
                 await dbContext.AddAsync(skill);
                 await dbContext.SaveChangesAsync();
 
@@ -77,7 +86,7 @@ namespace LimbusIdentityApi.Endpoints
                 return Results.CreatedAtRoute(GetSkill, new { id = skill.Id }, skill.AsSkillDto());
             });
 
-            group.MapPut("{id}", async (int id, IdentityDbContext dbContext, CreateSkillDto updateSkillDto, ILoggerFactory loggerFactory) =>
+            group.MapPut("{id}", async (int id, IdentityDbContext dbContext, CreateSkillDto updateSkillDto, ILoggerFactory loggerFactory, IValidator<CreateSkillDto> updateSkillValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
                 var skill = await dbContext.Skills.FindAsync(id);
@@ -86,6 +95,12 @@ namespace LimbusIdentityApi.Endpoints
                 {
                     logger.LogError("Put was called for the Skill with Id {id} but no Skill with that Id exists!", id);
                     return Results.NotFound("No Skill with that Id exists!");
+                }
+
+                var validationResult = await updateSkillValidator.ValidateAsync(updateSkillDto);
+                if (!validationResult.IsValid)
+                {
+                    return Results.BadRequest(validationResult.Errors);
                 }
 
                 skill.Image = updateSkillDto.Image;

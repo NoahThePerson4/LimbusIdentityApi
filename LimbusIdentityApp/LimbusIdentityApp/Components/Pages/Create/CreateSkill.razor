@@ -21,6 +21,7 @@ else
             <EditForm Model="@skill"
                       FormName="CreateSkill"
                       OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
                 <div>
                     <label for="Image" class="form-label">Image:</label>
                     <InputText id="Image" @bind-Value="skill.Image" class="form-control" />

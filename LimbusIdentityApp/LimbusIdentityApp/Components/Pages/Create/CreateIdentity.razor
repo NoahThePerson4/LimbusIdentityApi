@@ -21,6 +21,7 @@ else
             <EditForm Model="@ids"
                       FormName="CreateSkill"
                       OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
                 <div>
                     <label for="Name" class="form-label">Name:</label>
                     <InputText id="Name" @bind-Value="ids.Name" class="form-control" />
@@ -38,12 +39,12 @@ else
                 </div>
                 <div>
                     <label for="Ineffective" class="form-label">Ineffective:</label>
-                    <InputNumber id="Ineffective" @bind-Value="ids.Ineffective" class="form-control" />
+                    <InputText id="Ineffective" @bind-Value="ids.Ineffective" class="form-control" />
                     <ValidationMessage For="()=> ids.Ineffective" />
                 </div>
                 <div>
                     <label for="Fatal" class="form-label">Fatal:</label>
-                    <InputNumber id="Fatal" @bind-Value="ids.Fatal" class="form-control" />
+                    <InputText id="Fatal" @bind-Value="ids.Fatal" class="form-control" />
                     <ValidationMessage For="()=> ids.Fatal" />
                 </div>
                 <div>

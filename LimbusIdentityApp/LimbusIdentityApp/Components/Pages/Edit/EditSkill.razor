@@ -22,15 +22,16 @@ else
             <EditForm Model="@skill"
                       FormName="EditSkill"
                       OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+                <div>
+                    <label for="Image" class="form-label">Image:</label>
+                    <InputText id="Image" @bind-Value="skill.Image" class="form-control" />
+                    <ValidationMessage For="()=> skill.Image" />
+                </div>
                 <div>
                     <label for="Name" class="form-label">Name:</label>
                     <InputText id="Name" @bind-Value="skill.Name" class="form-control" />
                     <ValidationMessage For="()=> skill.Name" />
-                </div>
-                <div>
-                    <label for="Image" class="form-label">Image:</label>
-                    <InputText id="Image" @bind-Value="skill.Image" class="form-control"/>
-                    <ValidationMessage For="()=> skill.Image"/>
                 </div>
                 <div>
                     <label for="Type" class="form-label">Coin Type:</label>

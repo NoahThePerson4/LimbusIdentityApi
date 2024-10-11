@@ -20,6 +20,7 @@ else
             <EditForm Model="@passive"
                       FormName="EditPassive"
                       OnValidSubmit="HandleSubmit">
+                      <DataAnnotationsValidator />
                 <div>
                     <label for="Name" class="form-label">Name:</label>
                     <InputText id="Name" @bind-Value="passive.Name" class="form-control" />
@@ -32,11 +33,7 @@ else
                 </div>
                 <div>
                     <label for="Support" class="form-label">Support:</label>
-                    <select id="Support" @onchange="HandleSupportChange" class="form-control">
-                        <option value="">Not Set</option>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                        </select>
+                    <InputCheckbox id="Support" @bind-Value="passive.Support" class="form-check-input" />
                     <ValidationMessage For="()=> passive.Support" />
                 </div>
                 <div>
@@ -76,24 +73,6 @@ else
               NavigationManager.NavigateTo("/notfound");
             }
             Title = $"Edit {passive.Name}";
-        }
-    }
-
-    private void HandleSupportChange(ChangeEventArgs e)
-    {
-        var value = e.Value?.ToString();
-
-        if (string.IsNullOrEmpty(value))
-        {
-            passive.Support = null;
-        }
-        else if (value == "true")
-        {
-            passive.Support = true;
-        }
-        else if (value == "false")
-        {
-            passive.Support = false;
         }
     }
 

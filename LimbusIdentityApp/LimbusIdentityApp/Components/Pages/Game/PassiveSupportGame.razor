@@ -1,4 +1,4 @@
-﻿@page "/game/passive"
+﻿@page "/game/passive/support"
 @using System.Diagnostics
 @using LimbusIdentityApp.Clients
 @using LimbusIdentityApp.Models
@@ -57,7 +57,7 @@ else
         </tbody>
     </table>
 
-    if(passiveW is null)
+    if (passiveW is null)
     {
         <button class="btn btn-primary" @onclick="PickAPassive">Skip</button>
 
@@ -112,7 +112,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        passive2 = await PassiveClient.GetPassivesAsync(Filter:"false", PageNumber: 1, PageSize: 60);
+        passive2 = await PassiveClient.GetPassivesAsync(Filter: "true",PageNumber: 1, PageSize: 60);
     }
 
     private async Task PickAPassive()
@@ -139,7 +139,7 @@ else
         PassiveList.Clear();
         PassiveListA2.Clear();
 
-        foreach(var passive in passive2)
+        foreach (var passive in passive2)
         {
             PassiveList.Add(passive);
             PassiveListA.Add(passive.Name);
@@ -147,7 +147,7 @@ else
 
         var distinct = PassiveListA.Distinct();
 
-        foreach(var passive in distinct)
+        foreach (var passive in distinct)
         {
             PassiveListA2.Add(passive);
         }
@@ -160,7 +160,7 @@ else
 
     private async Task OnSearchChangedAsync()
     {
-        if(searchString == passive.Name)
+        if (searchString == passive.Name)
         {
             passiveW = passive;
             return;
