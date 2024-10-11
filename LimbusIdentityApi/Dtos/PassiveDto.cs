@@ -6,6 +6,6 @@
         string Cost,
         bool Support,
         string Description);
-    
-    
+
+
 }

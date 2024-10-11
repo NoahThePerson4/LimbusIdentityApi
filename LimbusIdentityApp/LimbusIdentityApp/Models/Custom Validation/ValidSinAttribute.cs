@@ -8,7 +8,7 @@ namespace LimbusIdentityApp.Models.Custom_Validation
         {
             var skillDetails = (SkillDetails)validationContext.ObjectInstance;
 
-            if (skillDetails.Sin == "Wrath" || skillDetails.Sin == "Lust" || skillDetails.Sin == "Sloth" 
+            if (skillDetails.Sin == "Wrath" || skillDetails.Sin == "Lust" || skillDetails.Sin == "Sloth"
                 || skillDetails.Sin == "Gluttony" || skillDetails.Sin == "Pride" || skillDetails.Sin == "Gloom"
                 || skillDetails.Sin == "Envy")
             {

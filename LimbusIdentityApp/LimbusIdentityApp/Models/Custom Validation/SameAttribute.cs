@@ -12,7 +12,7 @@ namespace LimbusIdentityApp.Models.Custom_Validation
             {
                 return new ValidationResult("You can't both Resist and be Weak to The Same Damage Type.");
             }
-            
+
             return ValidationResult.Success;
         }
     }
