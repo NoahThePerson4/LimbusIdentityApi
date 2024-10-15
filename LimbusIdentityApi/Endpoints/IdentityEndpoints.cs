@@ -2,6 +2,7 @@
 using LimbusIdentityApi.Data;
 using LimbusIdentityApi.Dtos;
 using LimbusIdentityApi.Extensions;
+using LimbusIdentityApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace LimbusIdentityApi.Endpoints
@@ -14,36 +15,14 @@ namespace LimbusIdentityApi.Endpoints
             var group = routes.MapGroup("/Identities")
                 .WithTags("Identities");
 
-            group.MapGet("", async (IdentityDbContext dbContext, [AsParameters] GetIdentityDto identityDto, ILoggerFactory loggerFactory) =>
+            group.MapGet("", async (IIdentityRepository repository, [AsParameters] GetIdentityDto request, ILoggerFactory loggerFactory) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
 
-                var identities = new List<Identity>();
+                var identities = (await repository.GetAllIdentities(request.filter, request.pageNumber, request.pageSize)).Select(ids => ids.AsIdentityDto());
 
-                if (identityDto.filter is not null)
-                {
-                    identities = await dbContext.Identities.Where(identity => identity.Name.Contains(identityDto.filter) || identity.Sinner.Contains(identityDto.filter))
-                    .OrderBy(i => i.Id)
-                    .Skip((identityDto.pageNumber - 1) * identityDto.pageSize)
-                    .Take(identityDto.pageSize)
-                    .Include(identity => identity.Passives)
-                    .Include(identity => identity.Skills)
-                    .ToListAsync();
-                }
-                else
-                {
-                    identities = await dbContext.Identities
-                    .OrderBy(i => i.Id)
-                    .Skip((identityDto.pageNumber - 1) * identityDto.pageSize)
-                    .Take(identityDto.pageSize)
-                    .Include(identity => identity.Passives)
-                    .Include(identity => identity.Skills)
-                    .ToListAsync();
-                }
-
-                var identitiesDtos = identities.Select(identity => identity.AsIdentityDto());
-                logger.LogInformation("Get on Identities was called for {pages} identities on page {page} with the filter {filter}.", identityDto.pageSize, identityDto.pageNumber, identityDto.filter);
-                return Results.Ok(identitiesDtos);
+                logger.LogInformation("Get on Identities was called for {pages} identities on page {page} with the filter {filter}.", request.pageSize, request.pageNumber, request.filter);
+                return Results.Ok(identities);
             });
 
             group.MapGet("{id}", async (int id, IdentityDbContext dbContext, ILoggerFactory loggerFactory) =>
