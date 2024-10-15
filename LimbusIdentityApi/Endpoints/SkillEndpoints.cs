@@ -2,6 +2,7 @@
 using LimbusIdentityApi.Data;
 using LimbusIdentityApi.Dtos;
 using LimbusIdentityApi.Extensions;
+using LimbusIdentityApi.Repositories;
 using LimbusIdentityApi.Validations;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -17,35 +18,19 @@ namespace LimbusIdentityApi.Endpoints
             var group = routes.MapGroup("/Skills")
                 .WithTags("Skills");
 
-            group.MapGet("", async (IdentityDbContext dbContext, [AsParameters] GetSkillDto skillDto, ILoggerFactory loggerFactory) =>
+            group.MapGet("", async (ISkillRepository repository, [AsParameters] GetSkillDto request, ILoggerFactory loggerFactory) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
-                var skill = new List<Skill>();
-                if (skillDto.filter is not null)
-                {
-                    skill = await dbContext.Skills.Where(skill => skill.Name.Contains(skillDto.filter) || skill.Type.Contains(skillDto.filter) || skill.Sin.Contains(skillDto.filter))
-                   .OrderBy(skill => skill.Id)
-                   .Skip((skillDto.pageNumber - 1) * skillDto.pageSize)
-                   .Take(skillDto.pageSize)
-                   .ToListAsync();
-                }
-                else
-                {
-                    skill = await dbContext.Skills
-                    .OrderBy(skill => skill.Id)
-                    .Skip((skillDto.pageNumber - 1) * skillDto.pageSize)
-                    .Take(skillDto.pageSize)
-                    .ToListAsync();
-                }
-                var skillDtos = skill.Select(skill => skill.AsSkillDto());
-                logger.LogInformation("Get On Skills was called for {pages} skills on page {page} with the filter {filter}.", skillDto.pageSize, skillDto.pageNumber, skillDto.filter);
-                return Results.Ok(skillDtos);
+                var skills = (await repository.GetAllSkills(request.filter, request.pageNumber, request.pageSize)).Select(skill => skill.AsSkillDto());
+
+                logger.LogInformation("Get On Skills was called for {pages} skills on page {page} with the filter {filter}.", request.pageSize, request.pageNumber, request.filter);
+                return Results.Ok(skills);
             });
 
-            group.MapGet("{id}", async (int id, IdentityDbContext dbContext, ILoggerFactory loggerFactory) =>
+            group.MapGet("{id}", async (int id, ISkillRepository repository, ILoggerFactory loggerFactory) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
-                var skill = await dbContext.Skills.FindAsync(id);
+                var skill = await repository.GetSkill(id);
 
                 if (skill is null)
                 {
@@ -57,7 +42,7 @@ namespace LimbusIdentityApi.Endpoints
             })
                 .WithName(GetSkill);
 
-            group.MapPost("", async (IdentityDbContext dbContext, CreateSkillDto skillDto, ILoggerFactory loggerFactory, IValidator<CreateSkillDto> createSkillValidator) =>
+            group.MapPost("", async (ISkillRepository repository, CreateSkillDto skillDto, ILoggerFactory loggerFactory, IValidator<CreateSkillDto> createSkillValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
                 Skill skill = new()
@@ -79,17 +64,16 @@ namespace LimbusIdentityApi.Endpoints
                     return Results.BadRequest(validationResult.Errors);
                 }
 
-                await dbContext.AddAsync(skill);
-                await dbContext.SaveChangesAsync();
+                await repository.CreateSkill(skill);
 
                 logger.LogInformation("The new Skill {name} was created with the Id {id}.", skill.Name, skill.Id);
                 return Results.CreatedAtRoute(GetSkill, new { id = skill.Id }, skill.AsSkillDto());
             });
 
-            group.MapPut("{id}", async (int id, IdentityDbContext dbContext, CreateSkillDto updateSkillDto, ILoggerFactory loggerFactory, IValidator<CreateSkillDto> updateSkillValidator) =>
+            group.MapPut("{id}", async (int id, ISkillRepository repository, CreateSkillDto updateSkillDto, ILoggerFactory loggerFactory, IValidator<CreateSkillDto> updateSkillValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
-                var skill = await dbContext.Skills.FindAsync(id);
+                var skill = await repository.GetSkill(id);
 
                 if (skill is null)
                 {
@@ -113,22 +97,20 @@ namespace LimbusIdentityApi.Endpoints
                 skill.SkillEffect = updateSkillDto.SkillEffect;
                 skill.CoinEffects = updateSkillDto.CoinEffects;
 
-                dbContext.Update(skill);
-                await dbContext.SaveChangesAsync();
+                await repository.UpdateSkill(skill);
 
                 logger.LogInformation("The Skill {name} was updated with the Id {Id}.", skill.Name, id);
                 return Results.NoContent();
             });
 
-            group.MapDelete("{id}", async (int id, IdentityDbContext dbContext, ILoggerFactory loggerFactory) =>
+            group.MapDelete("{id}", async (int id, ISkillRepository repository, ILoggerFactory loggerFactory) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(SkillEndpoints));
-                var skill = await dbContext.Skills.FindAsync(id);
+                var skill = await repository.GetSkill(id);
 
                 if (skill is not null)
                 {
-                    await dbContext.Skills.Where(skill => skill.Id == id)
-                    .ExecuteDeleteAsync();
+                    await repository.DeleteSkill(id);
                 }
                 logger.LogInformation("The Skill with Id {id} was deleted.", id);
                 return Results.NoContent();
