@@ -3,13 +3,14 @@ using LimbusIdentityApi.Data;
 using LimbusIdentityApi.Dtos;
 using LimbusIdentityApi.Extensions;
 using LimbusIdentityApi.Repositories;
+using LimbusIdentityApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace LimbusIdentityApi.Endpoints
 {
     public static class PassiveEndpoints
     {
-        public const string GetPassive = "GetPassive";
+        public const string getPassive = "GetPassive";
         public static RouteGroupBuilder MapPassiveEndpoints(this IEndpointRouteBuilder routes)
         {
             var group = routes.MapGroup("/Passives")
@@ -35,7 +36,7 @@ namespace LimbusIdentityApi.Endpoints
                 }
                 logger.LogInformation("Get was called on Passives with the Id {id} for Passive {name}.", id, passive.Name);
                 return Results.Ok(passive.AsPassiveDto());
-            }).WithName(GetPassive);
+            }).WithName(getPassive);
 
             group.MapPost("", async (IPassiveRepository repository, CreatePassiveDto passiveDto, ILoggerFactory loggerFactory, IValidator<CreatePassiveDto> createPassiveValidator) =>
             {
@@ -57,7 +58,7 @@ namespace LimbusIdentityApi.Endpoints
                 await repository.CreatePassive(passive);
 
                 logger.LogInformation("New Passive {name} was created with Id {id}.", passive.Name, passive.Id);
-                return Results.CreatedAtRoute(GetPassive, new { id = passive.Id }, passive.AsPassiveDto());
+                return Results.CreatedAtRoute(getPassive, new { id = passive.Id }, passive.AsPassiveDto());
             });
 
             group.MapPut("{id}", async (int id, IPassiveRepository repository, CreatePassiveDto updatePassiveDto, ILoggerFactory loggerFactory, IValidator<CreatePassiveDto> updatePassiveValidator) =>

@@ -2,6 +2,7 @@ using FluentValidation;
 using LimbusIdentityApi.Data;
 using LimbusIdentityApi.Endpoints;
 using LimbusIdentityApi.Repositories;
+using LimbusIdentityApi.Services;
 using LimbusIdentityApi.Validations;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -20,6 +21,8 @@ builder.Services.AddDbContext<IdentityDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+//builder.Services.AddDbContext<IdentityDbContext>(options => options.UseInMemoryDatabase("Passives"));
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +31,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPassiveRepository, PassiveRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
+builder.Services.AddScoped<PassiveService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateSkillDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreatePassiveDtoValidator>();
