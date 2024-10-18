@@ -53,9 +53,13 @@ namespace LimbusIdentityApi.Repositories
                 return _dbContext.Passives;
             }
 
+            bool parsedBool;
+            bool isBool = bool.TryParse(filter, out parsedBool);
+
             return _dbContext.Passives
                 .Where(passive =>
-                passive.Name.Contains(filter) || passive.Description.Contains(filter) || passive.Cost.Contains(filter));
+                passive.Name.Contains(filter) || passive.Description.Contains(filter) || passive.Cost.Contains(filter) 
+                || (isBool && passive.Support.Equals(parsedBool)));
         }
     }
 }
