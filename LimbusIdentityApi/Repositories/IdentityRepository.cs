@@ -130,7 +130,7 @@ namespace LimbusIdentityApi.Repositories
 
             return _dbContext.Identities
                 .Where(identities =>
-                identities.Name.Contains(filter));
+                identities.Name.Contains(filter) || identities.Sinner.Contains(filter) || identities.Ineffective.Contains(filter));
         }
     }
 }

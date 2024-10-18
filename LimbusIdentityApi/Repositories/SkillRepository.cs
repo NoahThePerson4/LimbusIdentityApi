@@ -52,7 +52,7 @@ namespace LimbusIdentityApi.Repositories
 
             return _dbContext.Skills
                 .Where(skill =>
-                skill.Name.Contains(filter));
+                skill.Name.Contains(filter) || skill.Type.Contains(filter) || skill.Sin.Contains(filter));
         }
     }
 }
