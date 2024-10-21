@@ -69,7 +69,6 @@ public class IntegrationTestSkills
         var httpClient = _factory.CreateClient();
         var skillId = 1;
         var skill = new Skill { 
-            Id = skillId,
             Image = "https://MyCoolImage.png",
             Name = "Test",
             Type = "Blunt",
@@ -83,6 +82,13 @@ public class IntegrationTestSkills
 
         var createResponse = await httpClient.PostAsJsonAsync("skills", skill);
         createResponse.EnsureSuccessStatusCode();
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+            var savedSkill = await context.Skills.FirstOrDefaultAsync(s => s.Id == skillId);
+            Assert.NotNull(savedSkill);
+        }
+
 
         //Act
         var response = await httpClient.GetAsync($"skills/{skillId}");
