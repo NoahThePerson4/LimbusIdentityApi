@@ -42,8 +42,12 @@ namespace LimbusIdentityApi.Repositories
 
         public async Task DeletePassive(int id)
         {
-            await _dbContext.Passives.Where(passive => passive.Id == id)
-                .ExecuteDeleteAsync();
+            var passive = await _dbContext.Passives.FindAsync(id);
+            if(passive != null)
+            {
+                _dbContext.Passives.Remove(passive);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
         private IQueryable<Passive> FilterPassive(string? filter)

@@ -69,6 +69,7 @@ public class IntegrationTestSkills
         var httpClient = _factory.CreateClient();
         var skillId = 1;
         var skill = new Skill { 
+            Id = skillId,
             Image = "https://MyCoolImage.png",
             Name = "Test",
             Type = "Blunt",

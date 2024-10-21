@@ -118,8 +118,12 @@ namespace LimbusIdentityApi.Repositories
 
         public async Task DeleteIdentity(int id)
         {
-            await _dbContext.Identities.Where(ids => ids.Id == id)
-                .ExecuteDeleteAsync();
+            var ids = await _dbContext.Identities.FindAsync(id);
+            if(ids is not null)
+            {
+                _dbContext.Identities.Remove(ids);
+                await _dbContext.SaveChangesAsync();
+            }
         }
         private IQueryable<Identity> FilterIdentities(string? filter)
         {

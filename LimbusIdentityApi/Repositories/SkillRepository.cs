@@ -39,8 +39,14 @@ namespace LimbusIdentityApi.Repositories
 
         public async Task DeleteSkill(int id)
         {
-            await _dbContext.Skills.Where(skill => skill.Id == id)
-                .ExecuteDeleteAsync();
+            var skill = await _dbContext.Skills.FindAsync(id);
+
+            if (skill is not null)
+            {
+                _dbContext.Skills.Remove(skill);
+                await _dbContext.SaveChangesAsync();
+            }
+
         }
 
         private IQueryable<Skill> FilterSkills(string? filter)
