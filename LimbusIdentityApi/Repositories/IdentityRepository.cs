@@ -31,7 +31,7 @@ namespace LimbusIdentityApi.Repositories
             return await _dbContext.Identities
                 .Include(e => e.Skills)
                 .Include(e => e.Passives)
-                .FirstOrDefaultAsync(ids => ids.Id == id);     
+                .FirstOrDefaultAsync(ids => ids.Id == id);
         }
 
         public async Task<Identity> CreateIdentity(CreateIdentityDto identityDto)

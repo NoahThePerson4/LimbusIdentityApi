@@ -94,7 +94,14 @@ namespace LimbusIdentityApi.Endpoints
 
                 if (passive is not null)
                 {
-                    await repository.DeletePassive(id);
+                    try{
+                        await repository.DeletePassive(id); 
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "An error occurred while trying to delete the Passive with Id {id}: {message}", id, ex.Message);
+                        return Results.Problem("An error occurred while deleting the passive. Please try again later.");
+                    }
                 }
                 logger.LogInformation("The Passive with Id {id} was deleted.", id);
                 return Results.NoContent();

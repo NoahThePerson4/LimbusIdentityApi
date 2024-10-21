@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Testcontainers.MsSql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation.Results;
 
 namespace LimbusIdentity.Test;
 
@@ -107,6 +108,41 @@ public class IntegrationTestSkills
     }
 
     [Fact]
+    public async Task PostSkills_ShouldReturnBadRequest_WhenSkillFailsToValidate()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        var skill = new Skill
+        {
+            Id = 1,
+            Image = "https://MyCoolImage.png",
+            Name = "string",
+            Type = "Gloom",
+            Sin = "Cool",
+            OffenseLevel = -5,
+            MinRoll = 5,
+            MaxRoll = 3,
+            SkillEffect = "None",
+            CoinEffects = new List<string> { "None" }
+        };
+
+        //Act
+        var result = await httpClient.PostAsJsonAsync("skills",skill);
+        var content = result.Content.ReadAsStringAsync();
+        var validationErrors = await result.Content.ReadFromJsonAsync<List<ValidationFailure>>();
+
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        validationErrors.Should().NotBeNull();
+        validationErrors.Should().Contain(e => e.PropertyName == "Name" && e.ErrorMessage == "You left the skill on the default name.");
+        validationErrors.Should().Contain(e => e.PropertyName == "Type" && e.ErrorMessage == "Coin Type must be either Slash, Pierce, or Blunt.");
+        validationErrors.Should().Contain(e=> e.PropertyName == "Sin" && e.ErrorMessage == "Sin Type must be either Wrath. Lust, Sloth, Gluttony, Gloom, Pride, or Envy.");
+        validationErrors.Should().Contain(e => e.PropertyName == "OffenseLevel" && e.ErrorMessage == "Offense Level can't be negative.");
+        validationErrors.Should().Contain(e => e.PropertyName == "MinRoll" && e.ErrorMessage == "Min Roll can't be higher than your Max Roll.");
+    }
+
+    [Fact]
     public async Task UpdateSkills_ShouldReturnNoContent_WhenSkillExists()
     {
         //Arrange
@@ -152,11 +188,6 @@ public class IntegrationTestSkills
         updateResult.Should().BeEquivalentTo(newSkill);
     }
 
-    public async Task DisposeAsync()
-    {
-        await _msSqlContainer.DisposeAsync().AsTask();
-    }
-
     [Fact]
     public async Task UpdateSkills_ShouldReturnNotFound_WhenSkillDoesNotExist()
     {
@@ -182,6 +213,96 @@ public class IntegrationTestSkills
 
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task UpdateSkills_ShouldReturnBadRequest_WhenSkillFailsToValidate()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+
+        var skillPost = new Skill
+        {
+            Id = 1,
+            Image = "https://MyCoolImage.png",
+            Name = "Test",
+            Type = "Blunt",
+            Sin = "Gloom",
+            OffenseLevel = 40,
+            MinRoll = 2,
+            MaxRoll = 4,
+            SkillEffect = "None",
+            CoinEffects = new List<string> { "None" }
+        };
+
+        var skill = new Skill
+        {
+            Id = 1,
+            Image = "https://MyCoolImage.png",
+            Name = "string",
+            Type = "Gloom",
+            Sin = "Cool",
+            OffenseLevel = -5,
+            MinRoll = 5,
+            MaxRoll = 3,
+            SkillEffect = "None",
+            CoinEffects = new List<string> { "None" }
+        };
+
+        //Act
+        await httpClient.PostAsJsonAsync("skills", skillPost);
+        var result = await httpClient.PutAsJsonAsync("skills/1", skill);
+        var content = result.Content.ReadAsStringAsync();
+        var validationErrors = await result.Content.ReadFromJsonAsync<List<ValidationFailure>>();
+
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        validationErrors.Should().NotBeNull();
+        validationErrors.Should().Contain(e => e.PropertyName == "Name" && e.ErrorMessage == "You left the skill on the default name.");
+        validationErrors.Should().Contain(e => e.PropertyName == "Type" && e.ErrorMessage == "Coin Type must be either Slash, Pierce, or Blunt.");
+        validationErrors.Should().Contain(e => e.PropertyName == "Sin" && e.ErrorMessage == "Sin Type must be either Wrath. Lust, Sloth, Gluttony, Gloom, Pride, or Envy.");
+        validationErrors.Should().Contain(e => e.PropertyName == "OffenseLevel" && e.ErrorMessage == "Offense Level can't be negative.");
+        validationErrors.Should().Contain(e => e.PropertyName == "MinRoll" && e.ErrorMessage == "Min Roll can't be higher than your Max Roll.");
+    }
+
+    [Fact]
+    public async Task DeleteSkill_ReturnsNoContent_AfterDeleting()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        var skillId = 1;
+        var skill = new Skill
+        {
+            Id = 1,
+            Image = "https://MyCoolImage.png",
+            Name = "Test",
+            Type = "Blunt",
+            Sin = "Gloom",
+            OffenseLevel = 40,
+            MinRoll = 2,
+            MaxRoll = 4,
+            SkillEffect = "None",
+            CoinEffects = new List<string> { "None" }
+        };
+
+        //Act
+        var create = await httpClient.PostAsJsonAsync("/skills", skill);
+        create.EnsureSuccessStatusCode();
+
+        var result = await httpClient.DeleteAsync($"/skills/{skillId}");
+        var deleted = await httpClient.GetAsync($"/skills/{skillId}");
+
+        //Assert
+        create.StatusCode.Should().Be(HttpStatusCode.Created);
+        result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        deleted.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+    }
+
+    public async Task DisposeAsync()
+    {
+        await _msSqlContainer.DisposeAsync().AsTask();
     }
 }
 

@@ -13,6 +13,8 @@ using System.Data.SqlClient;
 using System.Data.Common;
 using System.Data;
 using Xunit.Abstractions;
+using Microsoft.AspNetCore.Mvc;
+using FluentValidation.Results;
 namespace LimbusIdentity.TestIntegration;
 
 [Collection("DatabaseTests")]
@@ -21,9 +23,11 @@ public class IntegrationTestPassives
 {
     private readonly WebApplicationFactory<IApiMarker> _factory;
     private readonly MsSqlContainer _msSqlContainer;
-
-    public IntegrationTestPassives(WebApplicationFactory<IApiMarker> factory)
+    private ITestOutputHelper _output;
+    public IntegrationTestPassives(WebApplicationFactory<IApiMarker> factory, ITestOutputHelper outPut)
     {
+        _output = outPut;
+
         _msSqlContainer = new MsSqlBuilder()
             .WithName("sa")
             .WithPassword("MySaPassword123")
@@ -101,6 +105,33 @@ public class IntegrationTestPassives
     }
 
     [Fact]
+    public async Task PostPassive_ReturnsBadRequest_WhenPassiveFailsToValidate()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        var passive = new Passive
+        {
+            Id = 1,
+            Name = "string",
+            Cost = "string",
+            Support = true,
+            Description = "string"
+        };
+
+        //Act
+        var result = await httpClient.PostAsJsonAsync("/passives", passive);
+        var content = await result.Content.ReadAsStringAsync();
+        var validationErrors = await result.Content.ReadFromJsonAsync<List<ValidationFailure>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        validationErrors.Should().NotBeNull();
+        validationErrors.Should().Contain(e => e.PropertyName == "Name" && e.ErrorMessage == "You left your name on the default Name.");
+        validationErrors.Should().Contain(e => e.PropertyName == "Cost" && e.ErrorMessage == "You left your Cost on the default Cost.");
+        validationErrors.Should().Contain(e => e.PropertyName == "Description" && e.ErrorMessage == "You left your Description on the default Description.");
+    }
+
+    [Fact]
     public async Task UpdatePassive_ReturnsNoContent_WhenPassiveExists()
     {
         //Arrange
@@ -156,6 +187,69 @@ public class IntegrationTestPassives
 
         //Assert
         updateResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task UpdatePassive_ReturnsBadRequest_WhenPassiveFailsToValidate()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        var passivePost = new Passive
+        {
+            Id = 1,
+            Name = "Test Passive",
+            Cost = "3 Test Owned",
+            Support = true,
+            Description = "A test passive"
+        };
+        var passive = new Passive
+        {
+            Id = 1,
+            Name = "string",
+            Cost = "string",
+            Support = true,
+            Description = "string"
+        };
+
+        //Act
+        await httpClient.PostAsJsonAsync("/passives", passivePost);
+        var result = await httpClient.PutAsJsonAsync("/passives/1", passive);
+        var content = await result.Content.ReadAsStringAsync();
+        var validationErrors = await result.Content.ReadFromJsonAsync<List<ValidationFailure>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        validationErrors.Should().NotBeNull();
+        validationErrors.Should().Contain(e => e.PropertyName == "Name" && e.ErrorMessage == "You left your name on the default Name.");
+        validationErrors.Should().Contain(e => e.PropertyName == "Cost" && e.ErrorMessage == "You left your Cost on the default Cost.");
+        validationErrors.Should().Contain(e => e.PropertyName == "Description" && e.ErrorMessage == "You left your Description on the default Description.");
+    }
+
+    [Fact]
+    public async Task DeletePassive_ReturnsNoContent_AfterDeleting()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        var passiveId = 1;
+        var passive = new Passive
+        {
+            Id = passiveId,
+            Name = "Test Passive",
+            Cost = "3 Test Owned",
+            Support = true,
+            Description = "A test passive"
+        };
+
+        //Act
+        var create = await httpClient.PostAsJsonAsync("/passives", passive);
+        create.EnsureSuccessStatusCode();
+
+        var result = await httpClient.DeleteAsync($"/passives/1");
+        var deleted = await httpClient.GetAsync($"/passives/{passiveId}");
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
     }
 
     public async Task DisposeAsync()

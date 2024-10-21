@@ -35,7 +35,7 @@ namespace LimbusIdentityApi.Endpoints
                     logger.LogError("Get on Identities was called for the Id {id} but no Identity with that Id exists!", id);
                     return Results.NotFound("No Identity with that Id exists!");
                 }
-                logger.LogInformation("Get on Identities was called for the Identity {name} {sinner} with Id {id}.", identity.Name,identity.Sinner, id);
+                logger.LogInformation("Get on Identities was called for the Identity {name} {sinner} with Id {id}.", identity.Name, identity.Sinner, id);
                 return Results.Ok(identity.AsIdentityDetailedDto());
             })
                 .WithName(GetIdentity);
@@ -43,8 +43,8 @@ namespace LimbusIdentityApi.Endpoints
             group.MapPost("", async (IIdentityRepository repository, CreateIdentityDto identityDto, ILoggerFactory loggerFactory, IValidator<CreateIdentityDto> createIdentityValidator) =>
             {
                 var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
-                
-                
+
+
                 var validationResult = await createIdentityValidator.ValidateAsync(identityDto);
                 if (!validationResult.IsValid)
                 {
@@ -62,7 +62,7 @@ namespace LimbusIdentityApi.Endpoints
                 var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
                 var identity = await repository.GetIdentity(id);
 
-                if(identity is null)
+                if (identity is null)
                 {
                     logger.LogError("Put was called on Identities with the Id {id} but no Identity with that Id exists!", id);
                     return Results.NotFound("No Identity with that Id exists!");
@@ -85,7 +85,7 @@ namespace LimbusIdentityApi.Endpoints
             {
                 var logger = loggerFactory.CreateLogger(nameof(IdentityEndpoints));
                 var identity = await repository.GetIdentity(id);
-                if(identity is not null)
+                if (identity is not null)
                 {
                     await repository.DeleteIdentity(id);
                 }
