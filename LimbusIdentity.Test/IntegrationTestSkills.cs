@@ -135,7 +135,6 @@ public class IntegrationTestSkills
 
         //Act
         var result = await httpClient.PostAsJsonAsync("skills",skill);
-        var content = result.Content.ReadAsStringAsync();
         var validationErrors = await result.Content.ReadFromJsonAsync<List<ValidationFailure>>();
 
 

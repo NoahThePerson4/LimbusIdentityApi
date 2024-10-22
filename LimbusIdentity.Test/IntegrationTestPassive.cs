@@ -65,6 +65,122 @@ public class IntegrationTestPassives
     }
 
     [Fact]
+    public async Task GetAll_ReturnsOKAndAllPassives_WhenNoFilterIsUsed()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        List<Passive> passives = new List<Passive>
+        {
+            new Passive {Name = "Red Passive", Cost = "3 Wrath", Support = false, Description = "Wrath is Red."},
+            new Passive {Name = "Blue Passive", Cost = "3 Gloom", Support = true, Description = "Gloom is Blue."},
+            new Passive {Name = "Purple Passive", Cost = "3 Envy", Support = false, Description = "Envy is Purple."}
+        };
+
+        foreach( var passive in passives)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/passives", passive);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var result = await httpClient.GetAsync("/passives?pageNumber=1&pageSize=3");
+        var passiveList = await result.Content.ReadFromJsonAsync<IEnumerable<PassiveDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        passiveList.Should().HaveCount(3);
+        passiveList.First().Name.Should().Be("Red Passive");
+        passiveList.Should().Contain(p => p.Name == "Blue Passive" && p.Cost == "3 Gloom");
+        passiveList.Should().Contain(p => p.Name == "Purple Passive" && p.Cost == "3 Envy");
+    }
+
+    [Fact]
+    public async Task GetAll_ReturnsOKAndFilteredPassives_WhenNameFilterIsUsed()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        List<Passive> passives = new List<Passive>
+        {
+            new Passive {Name = "Red Passive", Cost = "3 Wrath", Support = false, Description = "Wrath is Red."},
+            new Passive {Name = "Blue Passive", Cost = "3 Gloom", Support = true, Description = "Gloom is Blue."},
+            new Passive {Name = "Purple Passive", Cost = "3 Envy", Support = false, Description = "Envy is Purple."}
+        };
+
+        foreach (var passive in passives)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/passives", passive);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var filter = "Purple";
+        var result = await httpClient.GetAsync($"/passives?filter={filter}&pageNumber=1&pageSize=3");
+        var count = await result.Content.ReadFromJsonAsync<IEnumerable<PassiveDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        count.Should().HaveCount(1);
+        count.First().Name.Should().Be("Purple Passive");
+    }
+
+    [Fact]
+    public async Task GetAll_ReturnsOKAndFilteredPassives_WhenSupportFilterIsUsed()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        List<Passive> passives = new List<Passive>
+        {
+            new Passive {Id = 1, Name = "Red Passive", Cost = "3 Wrath", Support = false, Description = "Wrath is Red."},
+            new Passive {Id = 2, Name = "Blue Passive", Cost = "3 Gloom", Support = true, Description = "Gloom is Blue."},
+            new Passive {Id = 3, Name = "Purple Passive", Cost = "3 Envy", Support = false, Description = "Envy is Purple."}
+        };
+
+        foreach (var passive in passives)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/passives", passive);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var filter = "true";
+        var result = await httpClient.GetAsync($"/passives?filter={filter}&pageNumber=1&pageSize=3");
+        var count = await result.Content.ReadFromJsonAsync<IEnumerable<PassiveDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        count.Should().HaveCount(1);
+        count.First().Name.Should().Be("Blue Passive");
+    }
+
+    [Fact]
+    public async Task GetAll_ReturnsOKAndEmptyPassives_WhenInvalidFilterIsUsed()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        List<Passive> passives = new List<Passive>
+        {
+            new Passive {Name = "Red Passive", Cost = "3 Wrath", Support = false, Description = "Wrath is Red."},
+            new Passive {Name = "Blue Passive", Cost = "3 Gloom", Support = true, Description = "Gloom is Blue."},
+            new Passive {Name = "Purple Passive", Cost = "3 Envy", Support = false, Description = "Envy is Purple."}
+        };
+
+        foreach (var passive in passives)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/passives", passive);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var filter = "Green";
+        var result = await httpClient.GetAsync($"/passives?filter={filter}&pageNumber=1&pageSize=3");
+        var count = await result.Content.ReadFromJsonAsync<IEnumerable<PassiveDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        count.Should().HaveCount(0);
+    }
+
+    [Fact]
     public async Task GetPassive_ReturnsOkAndObject_WhenPassiveExists()
     {
         // Arrange
@@ -214,7 +330,6 @@ public class IntegrationTestPassives
         //Act
         await httpClient.PostAsJsonAsync("/passives", passivePost);
         var result = await httpClient.PutAsJsonAsync("/passives/1", passive);
-        var content = await result.Content.ReadAsStringAsync();
         var validationErrors = await result.Content.ReadFromJsonAsync<List<ValidationFailure>>();
 
         //Assert
@@ -249,6 +364,7 @@ public class IntegrationTestPassives
 
         //Assert
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        deleted.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
     }
 
