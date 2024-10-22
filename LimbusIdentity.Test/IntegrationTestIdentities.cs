@@ -54,6 +54,95 @@ public class IntegrationTestIdentities
     }
 
     [Fact]
+    public async Task GetAll_ReturnsOkAndAllIds_WhenNoFilterIsUsed()
+    {
+        //Assert
+        var httpClient = _factory.CreateClient();
+        List<Identity> identities = new List<Identity>
+        {
+            new Identity {Name = "Test Green Fixer", Sinner = "Faust", Health = 102, Ineffective = "Blunt", Fatal = "Slash", DefenseLevel = 50, MinSpeed = 2, MaxSpeed = 4},
+            new Identity {Name = "Test Red Fixer", Sinner = "Faust", Health = 100, Ineffective = "Blunt", Fatal = "Slash", DefenseLevel = 50, MinSpeed = 2, MaxSpeed = 4},
+            new Identity {Name = "Test Blue Fixer", Sinner = "Rodion", Health = 101, Ineffective = "Blunt", Fatal = "Slash", DefenseLevel = 50, MinSpeed = 2, MaxSpeed = 4}
+        };
+
+        foreach (var identity in identities)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/identities", identity);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var result = await httpClient.GetAsync("/identities?pageNumber=1&pageSize=3");
+        var count = await result.Content.ReadFromJsonAsync<IEnumerable<IdentityDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        count.Should().HaveCount(3);
+        count.First().Name.Should().Be("Test Green Fixer");
+        count.Should().Contain(e => e.Name == "Test Red Fixer");
+        count.Should().Contain(e => e.Name == "Test Blue Fixer");
+    }
+
+    [Fact]
+    public async Task GetAll_ReturnsOkAndFilteredIds_WhenFilterIsUsed()
+    {
+        //Assert
+        var httpClient = _factory.CreateClient();
+        List<Identity> identities = new List<Identity>
+        {
+            new Identity {Name = "Test Green Fixer", Sinner = "Faust", Health = 102, Ineffective = "Blunt", Fatal = "Slash", DefenseLevel = 50, MinSpeed = 2, MaxSpeed = 4},
+            new Identity {Name = "Test Red Fixer", Sinner = "Faust", Health = 100, Ineffective = "Blunt", Fatal = "Slash", DefenseLevel = 50, MinSpeed = 2, MaxSpeed = 4},
+            new Identity {Name = "Test Blue Fixer", Sinner = "Rodion", Health = 101, Ineffective = "Blunt", Fatal = "Slash", DefenseLevel = 50, MinSpeed = 2, MaxSpeed = 4}
+        };
+
+        foreach (var identity in identities)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/identities", identity);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var filter = "Rodion";
+        var result = await httpClient.GetAsync($"/identities?filter={filter}&pageNumber=1&pageSize=3");
+        var count = await result.Content.ReadFromJsonAsync<IEnumerable<IdentityDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        count.Should().HaveCount(1);
+        count.First().Name.Should().Be("Test Blue Fixer");
+        count.First().Sinner.Should().Be("Rodion");
+    }
+
+    [Fact]
+    public async Task GetAll_ReturnsOkNoIds_WhenInvalidFilterIsUsed()
+    {
+        //Assert
+        var httpClient = _factory.CreateClient();
+        List<Identity> identities = new List<Identity>
+        {
+            new Identity {Name = "Test Green Fixer", Sinner = "Faust", Health = 102, Ineffective = "Blunt", Fatal = "Slash", DefenseLevel = 50, MinSpeed = 2, MaxSpeed = 4},
+            new Identity {Name = "Test Red Fixer", Sinner = "Faust", Health = 100, Ineffective = "Blunt", Fatal = "Slash", DefenseLevel = 50, MinSpeed = 2, MaxSpeed = 4},
+            new Identity {Name = "Test Blue Fixer", Sinner = "Rodion", Health = 101, Ineffective = "Blunt", Fatal = "Slash", DefenseLevel = 50, MinSpeed = 2, MaxSpeed = 4}
+        };
+
+        foreach (var identity in identities)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/identities", identity);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var filter = "Hong Lu";
+        var result = await httpClient.GetAsync($"/identities?filter={filter}&pageNumber=1&pageSize=3");
+        var count = await result.Content.ReadFromJsonAsync<IEnumerable<IdentityDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        count.Should().BeEmpty();
+    }
+
+
+    [Fact]
     public async Task GetIds_ReturnsOkAndObject_WhenIdsExists()
     {
         //Arrange

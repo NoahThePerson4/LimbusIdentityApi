@@ -177,7 +177,7 @@ public class IntegrationTestPassives
 
         //Assert
         result.StatusCode.Should().Be(HttpStatusCode.OK);
-        count.Should().HaveCount(0);
+        count.Should().BeEmpty();
     }
 
     [Fact]

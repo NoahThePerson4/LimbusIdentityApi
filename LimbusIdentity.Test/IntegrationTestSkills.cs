@@ -63,6 +63,91 @@ public class IntegrationTestSkills
     }
 
     [Fact]
+    public async Task GetAll_ReturnsOkAndAllSkills_WhenNoFilterIsUsed()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        List<Skill> skills = new List<Skill>
+        {
+            new Skill {Name = "Red", Type = "Blunt", Sin = "Wrath", OffenseLevel = 50, MinRoll = 2, MaxRoll = 3, SkillEffect = "None", CoinEffects = null},
+            new Skill {Name = "Blue", Type = "Slash", Sin = "Gloom", OffenseLevel = 50, MinRoll = 2, MaxRoll = 3, SkillEffect = "None", CoinEffects = null},
+            new Skill {Name = "Green", Type = "Blunt", Sin = "Gluttony", OffenseLevel = 50, MinRoll = 2, MaxRoll = 3, SkillEffect = "None", CoinEffects = null}
+        };
+        foreach (var skill in skills)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/skills", skill);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var result = await httpClient.GetAsync($"/skills?pageNumber=1&pageSize=3");
+        var count = await result.Content.ReadFromJsonAsync<IEnumerable<SkillDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        count.Should().HaveCount(3);
+        count.First().Name.Should().Be("Red");
+        count.Should().Contain(e => e.Name == "Blue");
+        count.Should().Contain(e => e.Name == "Green");
+    }
+
+    [Fact]
+    public async Task GetAll_ReturnsOkAndFilteredSkills_WhenFilterIsUsed()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        List<Skill> skills = new List<Skill>
+        {
+            new Skill {Name = "Red", Type = "Blunt", Sin = "Wrath", OffenseLevel = 50, MinRoll = 2, MaxRoll = 3, SkillEffect = "None", CoinEffects = null},
+            new Skill {Name = "Blue", Type = "Slash", Sin = "Gloom", OffenseLevel = 50, MinRoll = 2, MaxRoll = 3, SkillEffect = "None", CoinEffects = null},
+            new Skill {Name = "Green", Type = "Blunt", Sin = "Gluttony", OffenseLevel = 50, MinRoll = 2, MaxRoll = 3, SkillEffect = "None", CoinEffects = null}
+        };
+        foreach (var skill in skills)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/skills", skill);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var filter = "Slash";
+        var result = await httpClient.GetAsync($"/skills?filter={filter}&pageNumber=1&pageSize=3");
+        var count = await result.Content.ReadFromJsonAsync<IEnumerable<SkillDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        count.Should().HaveCount(1);
+        count.First().Name.Should().Be("Blue");
+        count.First().Type.Should().Be("Slash");
+    }
+
+    [Fact]
+    public async Task GetAll_ReturnsOkNoSkills_WhenInvalidFilterIsUsed()
+    {
+        //Arrange
+        var httpClient = _factory.CreateClient();
+        List<Skill> skills = new List<Skill>
+        {
+            new Skill {Name = "Red", Type = "Blunt", Sin = "Wrath", OffenseLevel = 50, MinRoll = 2, MaxRoll = 3, SkillEffect = "None", CoinEffects = null},
+            new Skill {Name = "Blue", Type = "Slash", Sin = "Gloom", OffenseLevel = 50, MinRoll = 2, MaxRoll = 3, SkillEffect = "None", CoinEffects = null},
+            new Skill {Name = "Green", Type = "Blunt", Sin = "Gluttony", OffenseLevel = 50, MinRoll = 2, MaxRoll = 3, SkillEffect = "None", CoinEffects = null}
+        };
+        foreach (var skill in skills)
+        {
+            var createResponse = await httpClient.PostAsJsonAsync("/skills", skill);
+            createResponse.EnsureSuccessStatusCode();
+        }
+
+        //Act
+        var filter = "Pride";
+        var result = await httpClient.GetAsync($"/skills?filter={filter}&pageNumber=1&pageSize=3");
+        var count = await result.Content.ReadFromJsonAsync<IEnumerable<SkillDto>>();
+
+        //Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        count.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task GetSkills_ShouldReturnOkAndObject_WhenSkillExists()
     {
         //Arrange
