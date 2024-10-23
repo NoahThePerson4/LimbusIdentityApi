@@ -46,6 +46,7 @@ namespace LimbusIdentityApi.Repositories
                 DefenseLevel = identityDto.DefenseLevel,
                 MinSpeed = identityDto.MinSpeed,
                 MaxSpeed = identityDto.MaxSpeed,
+                Faction = identityDto.Faction,
                 Image = identityDto.Image
             };
 
@@ -92,6 +93,7 @@ namespace LimbusIdentityApi.Repositories
             identity.DefenseLevel = updateIdentityDto.DefenseLevel;
             identity.MinSpeed = updateIdentityDto.MinSpeed;
             identity.MaxSpeed = updateIdentityDto.MaxSpeed;
+            identity.Faction = updateIdentityDto.Faction;
             identity.Image = updateIdentityDto.Image;
 
             if (updateIdentityDto.PassiveIds != null)
@@ -119,7 +121,7 @@ namespace LimbusIdentityApi.Repositories
         public async Task DeleteIdentity(int id)
         {
             var ids = await _dbContext.Identities.FindAsync(id);
-            if(ids is not null)
+            if (ids is not null)
             {
                 _dbContext.Identities.Remove(ids);
                 await _dbContext.SaveChangesAsync();
@@ -134,7 +136,7 @@ namespace LimbusIdentityApi.Repositories
 
             return _dbContext.Identities
                 .Where(identities =>
-                identities.Name.Contains(filter) || identities.Sinner.Contains(filter) || identities.Ineffective.Contains(filter));
+                identities.Name.Contains(filter) || identities.Sinner.Contains(filter) || identities.Ineffective.Contains(filter) || (identities.Faction != null && identities.Faction.Contains(filter)));
         }
     }
 }

@@ -27,13 +27,13 @@ namespace LimbusIdentityApp.Models
         [Range(0, 200, ErrorMessage = "Defense Level should be between 0 and 200.")]
         public int DefenseLevel { get; set; }
         [Required(ErrorMessage = "Please provide a Min Speed.")]
-        [MinMaxSpeed]
         [Range(0, 100, ErrorMessage = "Min Speed should be between 0 and 100.")]
         public int MinSpeed { get; set; }
         [Required(ErrorMessage = "Please provide a Max Speed.")]
         [MinMaxSpeed]
         [Range(0, 100, ErrorMessage = "Max Speed should be between 0 and 100.")]
         public int MaxSpeed { get; set; }
+        public string? Faction { get; set; }
         public string? Image { get; set; }
         public List<int> PassiveIds { get; set; }
         public List<int> SkillIds { get; set; }

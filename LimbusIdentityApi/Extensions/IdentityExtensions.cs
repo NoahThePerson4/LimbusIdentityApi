@@ -29,6 +29,7 @@ namespace LimbusIdentityApi.Extensions
                 identity.DefenseLevel,
                 identity.MinSpeed,
                 identity.MaxSpeed,
+                identity.Faction,
                 identity.Image,
                 passives,
                 skills
@@ -47,6 +48,7 @@ namespace LimbusIdentityApi.Extensions
                 identity.DefenseLevel,
                 identity.MinSpeed,
                 identity.MaxSpeed,
+                identity.Faction,
                 identity.Image,
                 identity.Passives.Select(p => p.Id).ToList(),
                 identity.Passives.Select(p => p.Name).ToList(),

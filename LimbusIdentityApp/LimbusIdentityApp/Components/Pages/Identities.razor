@@ -56,7 +56,6 @@ else
                     var name when name.Contains("Dieci Association", StringComparison.OrdinalIgnoreCase) => "color:goldenrod",
                     var name when name.Contains("Oufi Association", StringComparison.OrdinalIgnoreCase) => "color:purple",
                     var name when name.Contains("K Corp", StringComparison.OrdinalIgnoreCase) => "color:mediumseagreen",
-                    var name when name.Contains("Lobotomy", StringComparison.OrdinalIgnoreCase) => "color:lightslategrey",
                     var name when name.Contains("LCCB", StringComparison.OrdinalIgnoreCase) => "color:lightslategrey",
                     var name when name.Contains("LCB Sinner", StringComparison.OrdinalIgnoreCase) => "color:lightslategrey",
                     var name when name.Contains("N Corp", StringComparison.OrdinalIgnoreCase) => "color:orange",
@@ -71,6 +70,16 @@ else
                     var name when name.Contains("Ring", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
                     _ => "color:black"
                 };
+
+                if (id.Faction is not null)
+                {
+                    sinnerColor = id.Faction switch
+                    {
+                        var faction when faction.Contains("N Corp", StringComparison.OrdinalIgnoreCase) => "color:orange",
+                        var faction when faction.Contains("L Corp", StringComparison.OrdinalIgnoreCase) => "color:lightslategrey",
+                        _ => sinnerColor
+                    };
+                }
 
                 <tr>
                     <td style="text-align: center; vertical-align: bottom; padding: 0; margin: 0;">

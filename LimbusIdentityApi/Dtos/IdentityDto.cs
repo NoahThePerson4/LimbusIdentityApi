@@ -10,6 +10,7 @@
         int DefenseLevel,
         int MinSpeed,
         int MaxSpeed,
+        string? Faction,
         string? Image,
         List<string>? PassivesName,
         List<string>? SkillNames

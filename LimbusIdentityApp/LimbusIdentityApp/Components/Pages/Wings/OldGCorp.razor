@@ -80,6 +80,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ids = await IdentityClient.GetIdentitiesAsync(Filter: "G Corp", PageNumber: 1, PageSize: 10);
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: "Old G Corp", PageNumber: 1, PageSize: 10);
     }
 }

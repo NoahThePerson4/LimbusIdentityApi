@@ -83,10 +83,12 @@ else
 }
 
 @code {
-    private IdentitySummary[]? ids;
+    private List<IdentitySummary>? ids;
 
     protected override async Task OnInitializedAsync()
     {
-        ids = await IdentityClient.GetIdentitiesAsync(Filter: "Lobotomy", PageNumber: 1, PageSize: 10);
+        ids = (await IdentityClient.GetIdentitiesAsync(Filter: "Lobotomy", PageNumber: 1, PageSize: 10)).ToList();
+
+        ids.RemoveAll(identity => identity.Faction == "Technology Liberation Alliance");
     }
 }

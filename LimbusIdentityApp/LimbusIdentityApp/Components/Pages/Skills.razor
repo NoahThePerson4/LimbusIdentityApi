@@ -4,6 +4,8 @@
 @inject SkillClient SkillClient
 @rendermode InteractiveServer
 @attribute [StreamRendering]
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRunTime
 
 <PageTitle>Skills</PageTitle>
 
@@ -41,6 +43,7 @@ else
             <th>Edit</th>
             <th>Coin Count</th>
             <th>Coin Effects</th>
+            <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -79,6 +82,7 @@ else
                     </td>
                     <td>@skill.CoinEffects.Count() Coins</td>
                     <td>@string.Join(", ",skill.CoinEffects)</td>
+                    <td><button class="btn btn-danger" @onclick="() => DeleteButton(skill.Id)">Delete</button></td>
                 </tr>
             }
         </tbody>
@@ -98,6 +102,17 @@ else
     private string GetButtonClass(bool isDisabled)
     {
         return isDisabled ? "btn-disabled" : "btn-primary";
+    }
+
+    private async Task DeleteButton(int Id)
+    {
+        var confirmed = await JSRunTime.InvokeAsync<bool>("confirm", new object[] { $"Are you sure you want to delete the skill with this Id {Id}?" });
+
+        if (confirmed && skills is not null)
+        {
+            await SkillClient.DeleteSkillAsync(Id);
+            NavigationManager.NavigateTo("/skills");
+        }
     }
 
     int page = 1;

@@ -94,8 +94,9 @@ namespace LimbusIdentityApi.Endpoints
 
                 if (passive is not null)
                 {
-                    try{
-                        await repository.DeletePassive(id); 
+                    try
+                    {
+                        await repository.DeletePassive(id);
                     }
                     catch (Exception ex)
                     {

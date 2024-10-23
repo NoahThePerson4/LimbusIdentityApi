@@ -11,6 +11,7 @@
         public int DefenseLevel { get; set; }
         public int MinSpeed { get; set; }
         public int MaxSpeed { get; set; }
+        public string? Faction { get; set; }
         public string? Image { get; set; }
         public List<string>? PassivesName { get; set; }
         public List<string>? SkillNames { get; set; }

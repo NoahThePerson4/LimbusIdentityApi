@@ -62,6 +62,11 @@ else
                     <ValidationMessage For="()=> ids.MaxSpeed"/>
                 </div>
                 <div>
+                    <label for="Faction" class="form-label">Faction:</label>
+                    <InputText id="Faction" @bind-Value="ids.Faction" class="form-control" />
+                    <ValidationMessage For="()=> ids.Faction" />
+                </div>
+                <div>
                     <label for="Image" class="form-label">Image:</label>
                     <InputText id="Image" @bind-Value="ids.Image" class="form-control"/>
                     <ValidationMessage For="()=> ids.Image"/>

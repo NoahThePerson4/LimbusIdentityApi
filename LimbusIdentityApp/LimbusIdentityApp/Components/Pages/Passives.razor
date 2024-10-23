@@ -4,6 +4,8 @@
 @inject PassiveClient PassiveClient
 @rendermode InteractiveServer
 @attribute [StreamRendering]
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRunTime
 
 <PageTitle>Passives</PageTitle>
 
@@ -34,6 +36,7 @@ else
     <th>Support</th>
     <th>Edit</th>
     <th>Description</th>
+    <th>Delete</th>
     </thead>
     <tbody>
             @foreach(var passive in passives)
@@ -63,6 +66,7 @@ else
                         </div>
                     </td>
                     <td>@passive.Description</td>
+                    <td><button class="btn btn-danger" @onclick="() => DeleteButton(passive.Id)">Delete</button></td>
                 </tr>
             }
         </tbody>
@@ -77,6 +81,17 @@ else
     protected override async Task OnInitializedAsync()
     {
         passives = await PassiveClient.GetPassivesAsync(PageNumber: 1, PageSize: 10);
+    }
+
+    private async Task DeleteButton(int Id)
+    {
+        var confirmed = await JSRunTime.InvokeAsync<bool>("confirm", new object[] { $"Are you sure you want to delete the passive with this Id {Id}?" });
+
+        if (confirmed && passives is not null)
+        {
+            await PassiveClient.DeletePassiveAsync(Id);
+            NavigationManager.NavigateTo("/skills");
+        }
     }
 
     private string GetButtonClass(bool isDisabled)
