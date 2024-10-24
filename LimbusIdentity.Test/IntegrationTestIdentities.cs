@@ -214,9 +214,9 @@ public class IntegrationTestIdentities
         };
 
         //Act
-        var result = await httpClient.PostAsJsonAsync("/identities",ids);
+        var result = await httpClient.PostAsJsonAsync("/identities", ids);
         var content = await result.Content.ReadFromJsonAsync<List<ValidationFailure>>();
-        
+
         //Assert
         result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().Contain(e => e.PropertyName == "Name" && e.ErrorMessage == "You left your name on the default Name.");

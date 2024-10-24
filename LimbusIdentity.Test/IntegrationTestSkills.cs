@@ -153,7 +153,8 @@ public class IntegrationTestSkills
         //Arrange
         var httpClient = _factory.CreateClient();
         var skillId = 1;
-        var skill = new Skill { 
+        var skill = new Skill
+        {
             Id = skillId,
             Image = "https://MyCoolImage.png",
             Name = "Test",
@@ -163,8 +164,8 @@ public class IntegrationTestSkills
             MinRoll = 2,
             MaxRoll = 4,
             SkillEffect = "None",
-            CoinEffects = new List<string>{"None"}
-            };
+            CoinEffects = new List<string> { "None" }
+        };
 
         var createResponse = await httpClient.PostAsJsonAsync("skills", skill);
         createResponse.EnsureSuccessStatusCode();
@@ -219,7 +220,7 @@ public class IntegrationTestSkills
         };
 
         //Act
-        var result = await httpClient.PostAsJsonAsync("skills",skill);
+        var result = await httpClient.PostAsJsonAsync("skills", skill);
         var validationErrors = await result.Content.ReadFromJsonAsync<List<ValidationFailure>>();
 
 
@@ -228,7 +229,7 @@ public class IntegrationTestSkills
         validationErrors.Should().NotBeNull();
         validationErrors.Should().Contain(e => e.PropertyName == "Name" && e.ErrorMessage == "You left the skill on the default name.");
         validationErrors.Should().Contain(e => e.PropertyName == "Type" && e.ErrorMessage == "Coin Type must be either Slash, Pierce, or Blunt.");
-        validationErrors.Should().Contain(e=> e.PropertyName == "Sin" && e.ErrorMessage == "Sin Type must be either Wrath. Lust, Sloth, Gluttony, Gloom, Pride, or Envy.");
+        validationErrors.Should().Contain(e => e.PropertyName == "Sin" && e.ErrorMessage == "Sin Type must be either Wrath. Lust, Sloth, Gluttony, Gloom, Pride, or Envy.");
         validationErrors.Should().Contain(e => e.PropertyName == "OffenseLevel" && e.ErrorMessage == "Offense Level can't be negative.");
         validationErrors.Should().Contain(e => e.PropertyName == "MinRoll" && e.ErrorMessage == "Min Roll can't be higher than your Max Roll.");
     }
@@ -266,7 +267,7 @@ public class IntegrationTestSkills
             SkillEffect = "None",
             CoinEffects = new List<string> { "None" }
         };
-        var createResponse = await httpClient.PostAsJsonAsync("/skills",skill);
+        var createResponse = await httpClient.PostAsJsonAsync("/skills", skill);
         createResponse.EnsureSuccessStatusCode();
 
         //Act

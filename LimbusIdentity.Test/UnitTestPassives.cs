@@ -14,63 +14,63 @@ using NSubstitute;
 using Microsoft.AspNetCore.Mvc;
 namespace LimbusIdentity.Test;
 
-    public class UnitTestPassives
-     : IClassFixture<WebApplicationFactory<IApiMarker>>
+public class UnitTestPassives
+ : IClassFixture<WebApplicationFactory<IApiMarker>>
+{
+    private readonly WebApplicationFactory<IApiMarker> _factory;
+    private readonly IPassiveRepository _substituteRepository;
+
+    public UnitTestPassives(WebApplicationFactory<IApiMarker> factory)
     {
-        private readonly WebApplicationFactory<IApiMarker> _factory;
-        private readonly IPassiveRepository _substituteRepository;
+        _substituteRepository = Substitute.For<IPassiveRepository>();
 
-        public UnitTestPassives(WebApplicationFactory<IApiMarker> factory)
+        _substituteRepository.CreatePassive(Arg.Any<Passive>()).Returns(Task.CompletedTask);
+
+        _substituteRepository.GetPassive(1).Returns(new Passive
         {
-            _substituteRepository = Substitute.For<IPassiveRepository>();
-
-            _substituteRepository.CreatePassive(Arg.Any<Passive>()).Returns(Task.CompletedTask);
-
-            _substituteRepository.GetPassive(1).Returns(new Passive
-            {
-                Id = 1,
-                Name = "Test Passive",
-                Cost = "3 Test Owned",
-                Support = true,
-                Description = "A test passive"
-            });
+            Id = 1,
+            Name = "Test Passive",
+            Cost = "3 Test Owned",
+            Support = true,
+            Description = "A test passive"
+        });
 
         _substituteRepository.DeletePassive(1).Returns(Task.CompletedTask);
 
-            _factory = factory.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureServices(services =>
-                {
-                    var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IPassiveRepository));
-                    if (descriptor != null)
-                    {
-                        services.Remove(descriptor);
-                    }
-
-                    services.AddScoped(_ => _substituteRepository);
-                });
-            });
-        }
-
-        [Fact]
-        public async Task GetPassive_ReturnsOkAndObject_WhenPassiveExists()
+        _factory = factory.WithWebHostBuilder(builder =>
         {
-            // Arrange
-            var httpClient = _factory.CreateClient();
+            builder.ConfigureServices(services =>
+            {
+                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IPassiveRepository));
+                if (descriptor != null)
+                {
+                    services.Remove(descriptor);
+                }
 
-            // Act
-            var result = await httpClient.GetAsync("/passives/1");
-            var existingPassive = await result.Content.ReadFromJsonAsync<PassiveDto>();
-
-            // Assert
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
-            existingPassive.Should().BeEquivalentTo(new PassiveDto
-            (
-                1,
-                "Test Passive",
-                "3 Test Owned",
-                true,
-                "A test passive"
-            ));
-        }
+                services.AddScoped(_ => _substituteRepository);
+            });
+        });
     }
+
+    [Fact]
+    public async Task GetPassive_ReturnsOkAndObject_WhenPassiveExists()
+    {
+        // Arrange
+        var httpClient = _factory.CreateClient();
+
+        // Act
+        var result = await httpClient.GetAsync("/passives/1");
+        var existingPassive = await result.Content.ReadFromJsonAsync<PassiveDto>();
+
+        // Assert
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        existingPassive.Should().BeEquivalentTo(new PassiveDto
+        (
+            1,
+            "Test Passive",
+            "3 Test Owned",
+            true,
+            "A test passive"
+        ));
+    }
+}

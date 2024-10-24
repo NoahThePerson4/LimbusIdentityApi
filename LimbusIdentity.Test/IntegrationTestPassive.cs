@@ -76,7 +76,7 @@ public class IntegrationTestPassives
             new Passive {Name = "Purple Passive", Cost = "3 Envy", Support = false, Description = "Envy is Purple."}
         };
 
-        foreach( var passive in passives)
+        foreach (var passive in passives)
         {
             var createResponse = await httpClient.PostAsJsonAsync("/passives", passive);
             createResponse.EnsureSuccessStatusCode();
