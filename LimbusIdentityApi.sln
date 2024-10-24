@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LimbusIdentityApp", "Limbus
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LimbusIdentityApp.Client", "LimbusIdentityApp\LimbusIdentityApp.Client\LimbusIdentityApp.Client.csproj", "{7CC060A2-BDEA-4874-80F5-B6E0FAD08BE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LimbusIdentity.Test", "LimbusIdentity.Test\LimbusIdentity.Test.csproj", "{88B69B64-FE2C-4C04-8D1A-71CD6068FF71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LimbusIdentity.Test", "LimbusIdentity.Test\LimbusIdentity.Test.csproj", "{88B69B64-FE2C-4C04-8D1A-71CD6068FF71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

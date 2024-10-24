@@ -67,7 +67,10 @@ else
                     var name when name.Contains("Kurokumo", StringComparison.OrdinalIgnoreCase) => "color:red",
                     var name when name.Contains("Middle", StringComparison.OrdinalIgnoreCase) => "color:purple",
                     var name when name.Contains("Molar", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
-                    var name when name.Contains("Ring", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
+                    var name when name.Contains("Ring", StringComparison.OrdinalIgnoreCase) => "color:red",
+                    var name when name.Contains("MultiCrack", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
+                    var name when name.Contains("Rosespanner", StringComparison.OrdinalIgnoreCase) => "color:deeppink",
+                    var name when name.Contains("The Pequod", StringComparison.OrdinalIgnoreCase) => "color:forestgreen",
                     _ => "color:black"
                 };
 
@@ -77,6 +80,10 @@ else
                     {
                         var faction when faction.Contains("N Corp", StringComparison.OrdinalIgnoreCase) => "color:orange",
                         var faction when faction.Contains("L Corp", StringComparison.OrdinalIgnoreCase) => "color:lightslategrey",
+                        var name when name.Contains("Ryoshu's Bistro", StringComparison.OrdinalIgnoreCase) => "color:red",
+                        var name when name.Contains("Technology Liberation Alliance", StringComparison.OrdinalIgnoreCase) => "color:blue",
+                        var name when name.Contains("Wuthering", StringComparison.OrdinalIgnoreCase) => "color:purple",
+                        var name when name.Contains("Yurodivy", StringComparison.OrdinalIgnoreCase) => "color:goldenrod",
                         _ => sinnerColor
                     };
                 }

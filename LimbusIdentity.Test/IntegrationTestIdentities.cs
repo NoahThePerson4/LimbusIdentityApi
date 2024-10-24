@@ -158,6 +158,7 @@ public class IntegrationTestIdentities
             DefenseLevel = 50,
             MinSpeed = 2,
             MaxSpeed = 5,
+            Faction = "Test",
             Image = null,
             Passives = null,
             Skills = null
@@ -206,6 +207,7 @@ public class IntegrationTestIdentities
             DefenseLevel = -10,
             MinSpeed = 6,
             MaxSpeed = 3,
+            Faction = "Test",
             Image = null,
             Passives = null,
             Skills = null
@@ -240,6 +242,7 @@ public class IntegrationTestIdentities
             DefenseLevel = 50,
             MinSpeed = 2,
             MaxSpeed = 5,
+            Faction = "Test",
             Image = null,
             Passives = null,
             Skills = null
@@ -256,6 +259,7 @@ public class IntegrationTestIdentities
             DefenseLevel = 50,
             MinSpeed = 2,
             MaxSpeed = 5,
+            Faction = "Test",
             Image = null,
             Passives = null,
             Skills = null
@@ -293,6 +297,7 @@ public class IntegrationTestIdentities
             DefenseLevel = 50,
             MinSpeed = 2,
             MaxSpeed = 5,
+            Faction = "Test",
             Image = null,
             Passives = null,
             Skills = null
@@ -321,6 +326,7 @@ public class IntegrationTestIdentities
             DefenseLevel = 50,
             MinSpeed = 2,
             MaxSpeed = 5,
+            Faction = "Test",
             Image = null,
             Passives = null,
             Skills = null
@@ -337,6 +343,7 @@ public class IntegrationTestIdentities
             DefenseLevel = -10,
             MinSpeed = -5,
             MaxSpeed = -2,
+            Faction = "Test",
             Image = null,
             Passives = null,
             Skills = null

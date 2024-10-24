@@ -1,25 +1,23 @@
-﻿@page "/Wing/LobotomyCorporation"
+﻿@page "/City/RB"
 @using LimbusIdentityApp.Clients
 @using LimbusIdentityApp.Models
 @inject IdentityClient IdentityClient
 @rendermode InteractiveServer
 @attribute [StreamRendering]
 
-<PageTitle>Lobotomy Corporation</PageTitle>
+<PageTitle>Ryoshu's Bistro</PageTitle>
 <div>
-    <h1>Lobotomy Corporation</h1>
-    <div class="mt-2">
-        <a class="btn btn-primary" role="button" href="/Wing">Wings</a>
-    </div>
-    <text>Lobotomy Corporation had focused on energy production before the wing collapsed and became The Library.</text>
+    <h1>Ryoshu's Bistro</h1>
+    <a class="btn btn-primary me-2" role="button" href="/City">
+        <i class="bi bi-search">Syndicates and Offices</i>
+    </a>
     <div></div>
-    <img class="" src="https://limbuscompany.wiki.gg/images/0/0b/Lobotomy_Corp._Remnant_Faust_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/0/0d/Lobotomy_E.G.O_Lantern_Don_Quixote_Full.png" alt="Card image cap" style="width:320px; height:180px" />
+    <text>Ryoshu's Bistro or just RB for short is a Bistro in District 23. RB makes some really good meat pies.</text>
     <div></div>
-    <img class="" src="https://limbuscompany.wiki.gg/images/5/5b/Lobotomy_E.G.O_Solemn_Lament_Yi_Sang_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/e/e9/Lobotomy_E.G.O_Regret_Faust_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/d/de/Lobotomy_E.G.O_Red_Eyes_%26_Penitence_Ry%C5%8Dsh%C5%AB_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/3/37/Lobotomy_E.G.O_Magic_Bullet_Outis_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/d/d1/R.B._Sous-chef_Gregor_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <div></div>
+    <img class="" src="https://limbuscompany.wiki.gg/images/2/25/R.B._Chef_de_Cuisine_Ry%C5%8Dsh%C5%AB_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+
 </div>
 @if (ids is null)
 {
@@ -80,12 +78,10 @@ else
 }
 
 @code {
-    private List<IdentitySummary>? ids;
+    private IdentitySummary[]? ids;
 
     protected override async Task OnInitializedAsync()
     {
-        ids = (await IdentityClient.GetIdentitiesAsync(Filter: "Lobotomy", PageNumber: 1, PageSize: 10)).ToList();
-
-        ids.RemoveAll(identity => identity.Faction == "Technology Liberation Alliance");
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: "Bistro", PageNumber: 1, PageSize: 10);
     }
 }

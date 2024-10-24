@@ -1,25 +1,22 @@
-﻿@page "/Wing/LobotomyCorporation"
+﻿@page "/City/MultiCrack"
 @using LimbusIdentityApp.Clients
 @using LimbusIdentityApp.Models
 @inject IdentityClient IdentityClient
 @rendermode InteractiveServer
 @attribute [StreamRendering]
 
-<PageTitle>Lobotomy Corporation</PageTitle>
+<PageTitle>MultiCrack Office</PageTitle>
 <div>
-    <h1>Lobotomy Corporation</h1>
-    <div class="mt-2">
-        <a class="btn btn-primary" role="button" href="/Wing">Wings</a>
-    </div>
-    <text>Lobotomy Corporation had focused on energy production before the wing collapsed and became The Library.</text>
+    <h1>MultiCrack Office</h1>
+    <a class="btn btn-primary me-2" role="button" href="/City">
+        <i class="bi bi-search">Syndicates and Offices</i>
+    </a>
     <div></div>
-    <img class="" src="https://limbuscompany.wiki.gg/images/0/0b/Lobotomy_Corp._Remnant_Faust_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/0/0d/Lobotomy_E.G.O_Lantern_Don_Quixote_Full.png" alt="Card image cap" style="width:320px; height:180px" />
+    <text>MultiCrack Office is a fixer office that uses Prosthetics. MultiCrack Office was last seen riding a WARP train...</text>
     <div></div>
-    <img class="" src="https://limbuscompany.wiki.gg/images/5/5b/Lobotomy_E.G.O_Solemn_Lament_Yi_Sang_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/e/e9/Lobotomy_E.G.O_Regret_Faust_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/d/de/Lobotomy_E.G.O_Red_Eyes_%26_Penitence_Ry%C5%8Dsh%C5%AB_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
-    <img class="" src="https://limbuscompany.wiki.gg/images/3/37/Lobotomy_E.G.O_Magic_Bullet_Outis_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <img class="" src="https://limbuscompany.wiki.gg/images/d/d1/MultiCrack_Office_Fixer_Heathcliff_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
+    <div></div>
+    <img class="" src="https://limbuscompany.wiki.gg/images/8/8e/MultiCrack_Office_Rep_Faust_Full_Uptied.png" alt="Card image cap" style="width:320px; height:180px" />
 </div>
 @if (ids is null)
 {
@@ -80,12 +77,10 @@ else
 }
 
 @code {
-    private List<IdentitySummary>? ids;
+    private IdentitySummary[]? ids;
 
     protected override async Task OnInitializedAsync()
     {
-        ids = (await IdentityClient.GetIdentitiesAsync(Filter: "Lobotomy", PageNumber: 1, PageSize: 10)).ToList();
-
-        ids.RemoveAll(identity => identity.Faction == "Technology Liberation Alliance");
+        ids = await IdentityClient.GetIdentitiesAsync(Filter: "MultiCrack", PageNumber: 1, PageSize: 10);
     }
 }

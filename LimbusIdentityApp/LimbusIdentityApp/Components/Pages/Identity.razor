@@ -155,7 +155,7 @@ else
                             <td>@skill.Type</td>
                         </tr>
                         <tr>
-                            <td style="color:saddlebrown">Skill Sin</td>
+                            <td>Skill Sin</td>
                             <td style="@skillColor">@skill.Sin</td>
                         </tr>
                         <tr>
@@ -291,7 +291,10 @@ else
                 var name when name.Contains("Kurokumo", StringComparison.OrdinalIgnoreCase) => "color:red",
                 var name when name.Contains("Middle", StringComparison.OrdinalIgnoreCase) => "color:purple",
                 var name when name.Contains("Molar", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
-                var name when name.Contains("Ring", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
+                var name when name.Contains("Ring", StringComparison.OrdinalIgnoreCase) => "color:red",
+                var name when name.Contains("MultiCrack", StringComparison.OrdinalIgnoreCase) => "color:steelblue",
+                var name when name.Contains("Rosespanner", StringComparison.OrdinalIgnoreCase) => "color:deeppink",
+                var name when name.Contains("The Pequod", StringComparison.OrdinalIgnoreCase) => "color:forestgreen",
                 _ => ColorMain
 
             };
@@ -302,6 +305,10 @@ else
                 {
                     var faction when faction.Contains("N Corp", StringComparison.OrdinalIgnoreCase) => "color:orange",
                     var faction when faction.Contains("L Corp", StringComparison.OrdinalIgnoreCase) => "color:lightslategrey",
+                    var name when name.Contains("Ryoshu's Bistro", StringComparison.OrdinalIgnoreCase) => "color:red",
+                    var name when name.Contains("Technology Liberation Alliance", StringComparison.OrdinalIgnoreCase) => "color:blue",
+                    var name when name.Contains("Wuthering", StringComparison.OrdinalIgnoreCase) => "color:purple",
+                    var name when name.Contains("Yurodivy", StringComparison.OrdinalIgnoreCase) => "color:goldenrod",
                     _ => ColorMain
                 };
             }
@@ -330,6 +337,9 @@ else
                 var name when name.Contains("Middle", StringComparison.OrdinalIgnoreCase) => "/City/Middle",
                 var name when name.Contains("Molar", StringComparison.OrdinalIgnoreCase) => "/City/MolarOffice",
                 var name when name.Contains("Ring", StringComparison.OrdinalIgnoreCase) => "/City/Ring",
+                var name when name.Contains("MultiCrack", StringComparison.OrdinalIgnoreCase) => "/City/MultiCrack",
+                var name when name.Contains("Rosespanner", StringComparison.OrdinalIgnoreCase) => "/City/Rosespanner",
+                var name when name.Contains("The Pequod", StringComparison.OrdinalIgnoreCase) => "/City/Pequod",
                 _ => "/identities"
             };
 
@@ -339,6 +349,10 @@ else
                 {
                     var faction when faction.Contains("N Corp", StringComparison.OrdinalIgnoreCase) => "/Wing/NCorp",
                     var name when name.Contains("L Corp", StringComparison.OrdinalIgnoreCase) => "/Wing/LobotomyCorporation",
+                    var name when name.Contains("Ryoshu's Bistro", StringComparison.OrdinalIgnoreCase) => "/City/RB",
+                    var name when name.Contains("Technology Liberation Alliance", StringComparison.OrdinalIgnoreCase) => "/City/TLA",
+                    var name when name.Contains("Wuthering", StringComparison.OrdinalIgnoreCase) => "/City/Wuthering",
+                    var name when name.Contains("Yurodivy", StringComparison.OrdinalIgnoreCase) => "/City/Yurodivy",
                     _ => Faction
                 };
             }
@@ -384,6 +398,9 @@ else
                 var name when name.Contains("Molar Office", StringComparison.OrdinalIgnoreCase) => "Molar Office",
                 var name when name.Contains("Molar Boatworks", StringComparison.OrdinalIgnoreCase) => "Molar Boatworks",
                 var name when name.Contains("Ring", StringComparison.OrdinalIgnoreCase) => "The Ring",
+                var name when name.Contains("MultiCrack", StringComparison.OrdinalIgnoreCase) => "MultiCrack Office",
+                var name when name.Contains("Rosespanner", StringComparison.OrdinalIgnoreCase) => "Rosespanner Workshop",
+                var name when name.Contains("The Pequod", StringComparison.OrdinalIgnoreCase) => "The Pequod",
                 _ => identity.Name
             };
             if (identity.Faction is not null)
@@ -392,6 +409,10 @@ else
                 {
                     var name when name.Contains("N Corp", StringComparison.OrdinalIgnoreCase) => "N Corp",
                     var name when name.Contains("L Corp", StringComparison.OrdinalIgnoreCase) => "Lobotomy Company",
+                    var name when name.Contains("Ryoshu's Bistro", StringComparison.OrdinalIgnoreCase) => "Ryoshu's Bistro",
+                    var name when name.Contains("Technology Liberation Alliance", StringComparison.OrdinalIgnoreCase) => "Technology Liberation Alliance",
+                    var name when name.Contains("Wuthering", StringComparison.OrdinalIgnoreCase) => "Wuthering Heights",
+                    var name when name.Contains("Yurodivy", StringComparison.OrdinalIgnoreCase) => "The Yurodivy",
                     _ => FactionTitle
                 };
             }
