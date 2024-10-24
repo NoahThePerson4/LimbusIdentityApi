@@ -15,6 +15,14 @@
 else if (identity is null)
 {
     <button class="btn btn-primary" @onclick="PickAIdentity">Random identity</button>
+    
+    if (hard == false)
+    {
+        <div></div>
+        <text>Don't click hard mode to be able to use faction names instead of actual full names.</text>
+        <div></div>
+        <button class="btn btn-primary" @onclick="HardMode">Hard Mode?</button>
+    }
 
     <p><em>Loading identity...</em></p>
 }
@@ -27,22 +35,43 @@ else
         </div>
     </div>
 
-<button class="btn btn-primary" @onclick="Hint">Hint?</button>
+    <button class="btn btn-primary" @onclick="Hint">Hint?</button>
+    if (hard == true)
+    {
+        <table class="table table-striped table table-hover mt-3">
+            <thead class="table-dark">
+            <th>identity Length</th>
+            <th>Your Length</th>
+            </thead>
 
-    <table class="table table-striped table table-hover mt-3">
-        <thead class="table-dark">
-        <th>identity Length</th>
-        <th>Your Length</th>
-        </thead>
+            <tbody>
+                <tr>
+                    <td>@identity.Name.Length</td>
+                    <td>@searchString.Length</td>
+                </tr>
 
-        <tbody>
-            <tr>
-                <td>@identity.Name.Length</td>
-                <td>@searchString.Length</td>
-            </tr>
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <table class="table table-striped table table-hover mt-3">
+            <thead class="table-dark">
+            <th>identity Length</th>
+            <th>Faction Length</th>
+            <th>Your Length</th>
+            </thead>
 
-        </tbody>
-    </table>
+            <tbody>
+                <tr>
+                    <td>@identity.Name.Length</td>
+                    <td>@identity.Faction.Length</td>
+                    <td>@searchString.Length</td>
+                </tr>
+
+            </tbody>
+        </table>
+    }
 
     <table class="table table-striped table table-hover mt-3">
         <thead class="table-dark">
@@ -86,8 +115,10 @@ else
             <thead class="table-dark">
             <th>Id</th>
             <th>Name</th>
-            <th>Cost</th>
-            <th>Description</th>
+            <th>Sinner</th>
+            <th>Faction</th>
+            <th>Passives</th>
+            <th>Skills</th>
 
             </thead>
             <tbody>
@@ -96,6 +127,7 @@ else
                     <td>@identity.Id</td>
                     <td>@identity.Name</td>
                     <td>@identity.Sinner</td>
+                    <td>@identity.Faction</td>
                     <td>@string.Join(',',identity.PassivesName)</td>
                     <td>@string.Join(',', identity.SkillNames)</td>
                 </tr>
@@ -113,6 +145,7 @@ else
     private Models.IdentitySummary? identity;
     private Models.IdentitySummary? identityW;
     private string? searchString;
+    public bool hard = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -126,6 +159,11 @@ else
         identityW = null;
         searchString = "";
         sin = "Hidden";
+    }
+
+    private async Task HardMode()
+    {
+        hard = true;
     }
 
     List<IdentitySummary> identityList = new List<IdentitySummary>();
@@ -171,7 +209,7 @@ else
 
     private async Task OnSearchChangedAsync()
     {
-        if (searchString == identity.Name)
+        if (searchString == identity.Name || (hard == false && searchString == identity.Faction))
         {
             identityW = identity;
             return;
